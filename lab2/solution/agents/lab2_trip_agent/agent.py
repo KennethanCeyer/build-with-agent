@@ -2,22 +2,13 @@ from __future__ import annotations
 
 from google.genai import types
 
-
 from google.adk.agents import LlmAgent
+from google.adk.tools.load_memory_tool import LoadMemoryTool
 from google.adk.tools.preload_memory_tool import PreloadMemoryTool
 
 from .tools import (
-    auto_save_session_to_memory_callback,
     google_search,
 )
-
-
-async def fix_text_extraction_callback(callback_context, llm_response):
-    """GenAI SDK의 Built-in 도구 혼합 시 텍스트 추출 누락 문제를 해결합니다."""
-    if llm_response.content and llm_response.content.parts:
-        # ADK가 내부적으로 텍스트를 추출하지 못하더라도 parts에는 데이터가 유지됩니다.
-        pass
-    return llm_response
 
 
 def build_trip_planner() -> LlmAgent:
@@ -31,13 +22,17 @@ def build_trip_planner() -> LlmAgent:
         ),
         tools=[
             google_search,
+
+            # LoadMemoryTool은 에이전트가 메모리에서 정보를 검색할 때 사용할 수 있는 도구입니다.
+            # 명시적인 호출이 없는 한 이 도구는 사용되지 않습니다.
+            LoadMemoryTool(),
+
+            # PreloadMemoryTool은 시작과 매번 대화 과정에 자동으로 실행하여 메모리에서 정보를 불러옵니다.
             PreloadMemoryTool(),
         ],
         generate_content_config=types.GenerateContentConfig(
             tool_config=types.ToolConfig(include_server_side_tool_invocations=True),
         ),
-        after_model_callback=fix_text_extraction_callback,
-        after_agent_callback=auto_save_session_to_memory_callback,
     )
 
 

@@ -8,9 +8,8 @@ from google.adk.tools.preload_memory_tool import PreloadMemoryTool
 from google.genai import types
 
 from .tools import (
-    auto_save_session_to_memory_callback,
-    generate_theme_image,
-    google_search,
+    generate_theme_image,  # noqa: F401
+    google_search,  # noqa: F401
 )
 
 if TYPE_CHECKING:
@@ -24,16 +23,18 @@ memory_retrieval_tools = [
 meeting_planner = LlmAgent(
     name="meeting_planner",
     model="gemini-3.0-flash",
+
     # TODO 1: 모임 기획 매니저의 역할을 작성하세요.
     instruction=...,
-    tools=[google_search, *memory_retrieval_tools],
-    # TODO 2: 검색 도구와 메모리 도구 동시 사용 설정을 추가하세요.
+
+    # TODO 2: 검색 도구와 메모리 도구를 사용해주세요.
+    tools=[],
+
     generate_content_config=types.GenerateContentConfig(
         tool_config=types.ToolConfig(
-            include_server_side_tool_invocations=...,
+            include_server_side_tool_invocations=True,
         ),
     ),
-    after_agent_callback=auto_save_session_to_memory_callback,
 )
 
 design_expert = LlmAgent(
@@ -46,10 +47,11 @@ design_expert = LlmAgent(
         "친절하게 안내하세요. "
         "3. 주의: 텍스트 응답에 이미지 링크나 마크다운 태그(![]())를 포함하면 안 됩니다."
     ),
-    tools=[generate_theme_image],
+    # TODO 3: 디자이너 도구에 필요한 정의해주세요.
+    tools=[],
     generate_content_config=types.GenerateContentConfig(
         tool_config=types.ToolConfig(
-            include_server_side_tool_invocations=True,
+            include_server_side_tool_invocations=...,
         ),
     ),
 )
@@ -58,10 +60,8 @@ design_expert = LlmAgent(
 def build_meeting_manager() -> SequentialAgent:
     return SequentialAgent(
         name="root_agent",
-        # TODO 3: 에이전트들을 순서대로 배치하세요.
-        sub_agents=[
-            ...,
-        ],
+        # TODO 4: 에이전트들을 순서대로 배치하세요.
+        sub_agents=[],
     )
 
 

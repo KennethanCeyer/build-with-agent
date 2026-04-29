@@ -2,7 +2,6 @@ from google.adk.agents import LlmAgent
 from google.adk.tools.preload_memory_tool import PreloadMemoryTool
 
 from lab2_trip_agent.agent import root_agent
-from lab2_trip_agent.tools import auto_save_session_to_memory_callback
 
 
 def test_agent_structure():
@@ -14,7 +13,6 @@ def test_agent_structure():
     tool_names = [getattr(tool, "__name__", getattr(tool, "name", "")) for tool in root_agent.tools]
     assert "google_search" in tool_names
     assert any(isinstance(tool, PreloadMemoryTool) for tool in root_agent.tools)
-    assert root_agent.after_agent_callback is auto_save_session_to_memory_callback
 
 
 def test_agent_instruction():

@@ -7,7 +7,6 @@ from google.adk.tools import google_search
 load_dotenv()
 
 __all__ = [
-    "auto_save_session_to_memory_callback",
     "google_search",
     "generate_theme_image",
 ]
@@ -61,11 +60,3 @@ async def generate_theme_image(
         "filename": filename,
         "description": f"이미지가 {filename}으로 저장되었습니다.",
     }
-
-
-async def auto_save_session_to_memory_callback(callback_context):
-    invocation_context = callback_context._invocation_context
-    if hasattr(invocation_context, "memory_service") and invocation_context.memory_service:
-        await invocation_context.memory_service.add_session_to_memory(
-            invocation_context.session,
-        )
