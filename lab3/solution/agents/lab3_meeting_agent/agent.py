@@ -48,6 +48,7 @@ design_expert = LlmAgent(
     ),
 )
 
+
 def build_meeting_manager() -> SequentialAgent:
     return SequentialAgent(
         name="root_agent",

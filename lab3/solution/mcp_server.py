@@ -26,7 +26,9 @@ expose_google_api_key(PROJECT_ROOT)
     name="save_backup_plan",
     description="백업 모임 계획을 마크다운 파일로 저장합니다.",
 )
-def save_backup_plan(title: str, agenda: str, source_notes: str = "") -> dict[str, object]:
+def save_backup_plan(
+    title: str, agenda: str, source_notes: str = ""
+) -> dict[str, object]:
     return save_backup_plan_payload(
         title=title,
         agenda=agenda,
@@ -39,7 +41,9 @@ def save_backup_plan(title: str, agenda: str, source_notes: str = "") -> dict[st
     name="save_group_chat_update",
     description="친근한 단체 채팅 공지문을 마크다운 파일로 저장합니다.",
 )
-def save_group_chat_update(title: str, message: str, source_notes: str = "") -> dict[str, object]:
+def save_group_chat_update(
+    title: str, message: str, source_notes: str = ""
+) -> dict[str, object]:
     return save_group_chat_update_payload(
         title=title,
         message=message,

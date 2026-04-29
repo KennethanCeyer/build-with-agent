@@ -23,13 +23,10 @@ memory_retrieval_tools = [
 meeting_planner = LlmAgent(
     name="meeting_planner",
     model="gemini-3.0-flash",
-
     # TODO 1: 모임 기획 매니저의 역할을 작성하세요.
     instruction=...,
-
     # TODO 2: 검색 도구와 메모리 도구를 사용해주세요.
     tools=[],
-
     generate_content_config=types.GenerateContentConfig(
         tool_config=types.ToolConfig(
             include_server_side_tool_invocations=True,

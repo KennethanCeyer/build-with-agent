@@ -4,6 +4,7 @@ from lab3_meeting_agent.agent import (
     root_agent,
 )
 
+
 def test_agent_structure():
     assert isinstance(root_agent, SequentialAgent)
     assert root_agent.name == "root_agent"

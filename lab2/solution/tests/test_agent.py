@@ -10,7 +10,10 @@ def test_agent_structure():
     assert root_agent.model == "gemini-3.1-pro-preview"
     assert len(root_agent.tools) == 2
 
-    tool_names = [getattr(tool, "__name__", getattr(tool, "name", "")) for tool in root_agent.tools]
+    tool_names = [
+        getattr(tool, "__name__", getattr(tool, "name", ""))
+        for tool in root_agent.tools
+    ]
     assert "google_search" in tool_names
     assert any(isinstance(tool, PreloadMemoryTool) for tool in root_agent.tools)
 

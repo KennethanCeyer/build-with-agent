@@ -22,11 +22,9 @@ def build_trip_planner() -> LlmAgent:
         ),
         tools=[
             google_search,
-
             # LoadMemoryTool은 에이전트가 메모리에서 정보를 검색할 때 사용할 수 있는 도구입니다.
             # 명시적인 호출이 없는 한 이 도구는 사용되지 않습니다.
             LoadMemoryTool(),
-
             # PreloadMemoryTool은 시작과 매번 대화 과정에 자동으로 실행하여 메모리에서 정보를 불러옵니다.
             PreloadMemoryTool(),
         ],
