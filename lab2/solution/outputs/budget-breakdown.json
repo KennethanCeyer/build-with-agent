@@ -1,0 +1,18 @@
+{
+  "title": "예산 내역",
+  "currency": "KRW",
+  "total_krw": 91000,
+  "breakdown": {
+    "subway_krw": 6000,
+    "coffee_krw": 11000,
+    "snacks_krw": 12000,
+    "observatory_krw": 34000,
+    "dinner_krw": 28000
+  },
+  "assumptions": [
+    "Adults: 2",
+    "Coffee drinks: 2",
+    "Observatory stop: yes",
+    "Dinner included: yes"
+  ]
+}

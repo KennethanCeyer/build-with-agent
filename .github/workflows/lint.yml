@@ -1,0 +1,39 @@
+name: Docs And Handson Lint
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-handson:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        lab: ["lab1/handson", "lab2/handson", "lab3/handson"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install lab dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e "./${{ matrix.lab }}[dev]"
+
+      - name: Black
+        working-directory: ${{ matrix.lab }}
+        run: python -m black --check agents
+
+      - name: Ruff
+        working-directory: ${{ matrix.lab }}
+        run: python -m ruff check agents
+
+      - name: Mypy
+        working-directory: ${{ matrix.lab }}
+        run: python -m mypy agents

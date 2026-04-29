@@ -1,0 +1,43 @@
+name: CI
+
+"on":
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    name: Quality (${{ matrix.lab }}, Python ${{ matrix.python-version }})
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+        lab: ["lab1/solution", "lab2/solution", "lab3/solution"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install lab dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e "./${{ matrix.lab }}[dev]"
+
+      - name: Black
+        working-directory: ${{ matrix.lab }}
+        run: python -m black --check agents tests
+
+      - name: Ruff
+        working-directory: ${{ matrix.lab }}
+        run: python -m ruff check agents tests
+
+      - name: Mypy
+        working-directory: ${{ matrix.lab }}
+        run: python -m mypy agents
+
+      - name: Pytest
+        working-directory: ${{ matrix.lab }}
+        run: PYTHONPATH=agents python -m pytest -q tests -s
