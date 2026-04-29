@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from google.adk.agents import LlmAgent, SequentialAgent
+from google.adk.agents.context import Context
+from google.adk.models.llm_response import LlmResponse
 from google.adk.tools.load_memory_tool import load_memory
 from google.adk.tools.preload_memory_tool import PreloadMemoryTool
 from google.genai import types
@@ -49,12 +51,49 @@ design_expert = LlmAgent(
 )
 
 
+async def a2ui_builder_callback(
+    context: Context,
+    llm_response: LlmResponse,
+) -> None:
+    del context
+
+    if not llm_response.content or not llm_response.content.parts:
+        return None
+
+    body = "\n".join(
+        part.text for part in llm_response.content.parts if getattr(part, "text", None)
+    )
+    if not body:
+        return None
+
+    metadata = dict(llm_response.custom_metadata or {})
+    metadata["a2ui"] = {
+        "type": "meeting_plan_card",
+        "title": "모임 기획안",
+        "body": body,
+    }
+    llm_response.custom_metadata = metadata
+    return None
+
+
+a2ui_formatter = LlmAgent(
+    name="a2ui_formatter",
+    model="gemini-3.1-flash-lite-preview",
+    instruction=(
+        "앞선 모임 기획안과 이미지 생성 결과를 바탕으로 "
+        "사용자에게 보여줄 최종 모임 카드 내용을 간결하게 정리하세요."
+    ),
+    after_model_callback=a2ui_builder_callback,
+)
+
+
 def build_meeting_manager() -> SequentialAgent:
     return SequentialAgent(
         name="root_agent",
         sub_agents=[
             meeting_planner,
             design_expert,
+            a2ui_formatter,
         ],
     )
 

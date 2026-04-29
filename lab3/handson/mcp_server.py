@@ -8,8 +8,8 @@ from mcp.server.fastmcp import FastMCP
 from lab3_meeting_agent.adk_support import (
     expose_google_api_key,
     resolve_output_dir,
-    save_backup_plan_payload,
     save_group_chat_update_payload,
+    save_backup_plan_payload,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -45,7 +45,7 @@ def save_group_chat_update(
     title: str, message: str, source_notes: str = ""
 ) -> dict[str, object]:
     return save_group_chat_update_payload(
-        title=message,
+        title=title,
         message=message,
         source_notes=source_notes,
         output_dir=resolve_output_dir(PROJECT_ROOT),

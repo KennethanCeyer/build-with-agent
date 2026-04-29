@@ -1,6 +1,5 @@
-from __future__ import annotations
+"""`python -m lab2_trip_agent`로 에이전트 로딩만 확인합니다."""
 
 from .agent import root_agent
 
-if __name__ == "__main__":
-    print(f"ADK agent loaded: {root_agent.name}")
+print(f"ADK agent loaded: {root_agent.name}")

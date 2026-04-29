@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "workshop-agent-lab3-handson"
 version = "0.1.0"
-description = "ADK 및 A2A를 활용한 고급 에이전트 실습"
+description = "Advanced ADK and A2A workshop handson"
 requires-python = ">=3.11"
 dependencies = [
   "google-adk[a2a]==1.28.1",
@@ -20,9 +20,9 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "black>=25.1,<26.0",
+  "mypy>=1.14,<2.0",
   "pytest>=8.3,<9.0",
   "ruff>=0.11,<1.0",
-  "mypy>=1.14,<2.0",
   "types-Pillow",
 ]
 
@@ -39,6 +39,15 @@ src = ["agents", "apps", "remote_a2a"]
 
 [tool.ruff.lint]
 select = ["B", "E", "F", "I", "SIM", "UP"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+  "ignore:.*EXPERIMENTAL.*:UserWarning",
+]
 
 [tool.mypy]
 python_version = "3.11"

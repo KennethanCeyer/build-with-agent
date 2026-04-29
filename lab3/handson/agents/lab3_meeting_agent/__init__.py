@@ -1,5 +1,5 @@
-from __future__ import annotations
+"""랩 3에서 사용하는 `lab3_meeting_agent` 패키지입니다."""
 
-from .agent import root_agent as root_agent
+__all__ = ["__version__"]
 
-__all__ = ["root_agent"]
+__version__ = "0.1.0"

@@ -1,12 +1,12 @@
 from __future__ import annotations
-from google.adk.agents import LlmAgent
+
+from google.adk.agents import Agent
 
 from .tools import read_trip_notes, save_itinerary  # noqa: F401
 
 
-def build_travel_agent() -> LlmAgent:
-    # LlmAgent는 모델에게 지침을 부여하고 필요한 도구를 연결하여 작업을 수행합니다.
-    return LlmAgent(
+def build_travel_agent() -> Agent:
+    return Agent(
         name="trip_memo_agent",
         # TODO 1: 아래 모델 중 이 실습에 적합한 모델 이름을 선택하세요.
         # [gemini-3.0-flash, gemini-3.1-flash-lite-preview,
