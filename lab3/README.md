@@ -110,6 +110,20 @@ def build_meeting_manager() -> SequentialAgent:
     )
 ```
 
+**ADK 멀티 에이전트 주요 객체**
+
+ADK에는 여러 에이전트를 협업 구조로 구성하기 위한 다양한 객체가 있습니다. 다음 표를 살펴봅시다.
+
+| ADK 주요 객체 | 역할 | 구현 가능한 패턴 | 활용 예시 |
+| :--- | :--- | :--- | :--- |
+| **`SequentialAgent`** | 에이전트를 정해진 순서대로 실행하며 파이프라인 구축 (`output_key`, `session.state` 활용) | Sequential Pipeline | 문서 파싱 후 데이터 추출, 기획안 작성 후 디자인 생성 |
+| **`LlmAgent`** | 기본 에이전트 역할 및 하위 에이전트로의 작업 라우팅 (`sub_agents`, `description` 기반) | Coordinator / Dispatcher | 사용자 의도를 파악해 적합한 전문 담당 에이전트로 연결 |
+| **`ParallelAgent`** | 여러 작업을 병렬로 동시에 실행하고 마지막에 결과를 취합 (고유 `output_key` 지정) | Parallel Fan-Out / Gather | 코드 리뷰 시 보안, 스타일, 성능 검사를 동시에 진행 후 종합 |
+| **`LoopAgent`** | 특정 조건이 충족될 때까지 작업을 반복 실행 (`max_iterations`, `EventActions` 제어) | Generator and Critic, Iterative Refinement | 초안 작성 후 검토 에이전트의 피드백을 받아 반복 수정 |
+| **`AgentTool`** | 특정 에이전트 자체를 다른 에이전트가 호출할 수 있는 도구(Tool)로 래핑하여 위임 | Hierarchical Decomposition | 메인 리포트 에이전트가 필요할 때 전문 리서치 에이전트를 호출 |
+
+이번 Lab 3에서는 이 중에서 **`SequentialAgent`**를 활용 하겠습니다. `meeting_planner`가 모임 기획안을 먼저 작성하고, 그 결과물을 `design_expert`가 넘겨받아 테마 이미지를 생성하는 깔끔한 파이프라인을 만들어 봅시다.
+
 ### 4-3. 이미지 생성 도구 구현
 
 이미지 생성은 [Nano Banana2](https://gemini.google/kr/overview/image-generation/?hl=ko-KR) API를 이용해 구현할 수 있습니다. `agents/lab3_meeting_agent/tools.py` 파일을 다음과 같이 변경해서 API 기능을 연결해봅시다.
