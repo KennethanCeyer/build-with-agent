@@ -5,6 +5,7 @@
 ---
 
 ## 1. 실습 개요
+
 이번 실습은 여러 에이전트를 순차적으로 실행하는 **SequentialAgent** 구조를 활용합니다. 기획과 디자인 에이전트가 정보를 주고받으며 하나의 결과물을 도출하는 과정을 실습합니다.
 
 ```mermaid
@@ -114,13 +115,13 @@ def build_meeting_manager() -> SequentialAgent:
 
 ADK에는 여러 에이전트를 협업 구조로 구성하기 위한 다양한 객체가 있습니다. 다음 표를 살펴봅시다.
 
-| ADK 주요 객체 | 역할 | 구현 가능한 패턴 | 활용 예시 |
-| :--- | :--- | :--- | :--- |
-| **`SequentialAgent`** | 에이전트를 정해진 순서대로 실행하며 파이프라인 구축 (`output_key`, `session.state` 활용) | Sequential Pipeline | 문서 파싱 후 데이터 추출, 기획안 작성 후 디자인 생성 |
-| **`LlmAgent`** | 기본 에이전트 역할 및 하위 에이전트로의 작업 라우팅 (`sub_agents`, `description` 기반) | Coordinator / Dispatcher | 사용자 의도를 파악해 적합한 전문 담당 에이전트로 연결 |
-| **`ParallelAgent`** | 여러 작업을 병렬로 동시에 실행하고 마지막에 결과를 취합 (고유 `output_key` 지정) | Parallel Fan-Out / Gather | 코드 리뷰 시 보안, 스타일, 성능 검사를 동시에 진행 후 종합 |
-| **`LoopAgent`** | 특정 조건이 충족될 때까지 작업을 반복 실행 (`max_iterations`, `EventActions` 제어) | Generator and Critic, Iterative Refinement | 초안 작성 후 검토 에이전트의 피드백을 받아 반복 수정 |
-| **`AgentTool`** | 특정 에이전트 자체를 다른 에이전트가 호출할 수 있는 도구(Tool)로 래핑하여 위임 | Hierarchical Decomposition | 메인 리포트 에이전트가 필요할 때 전문 리서치 에이전트를 호출 |
+| ADK 주요 객체         | 역할                                                                                     | 구현 가능한 패턴                           | 활용 예시                                                    |
+| :-------------------- | :--------------------------------------------------------------------------------------- | :----------------------------------------- | :----------------------------------------------------------- |
+| **`SequentialAgent`** | 에이전트를 정해진 순서대로 실행하며 파이프라인 구축 (`output_key`, `session.state` 활용) | Sequential Pipeline                        | 문서 파싱 후 데이터 추출, 기획안 작성 후 디자인 생성         |
+| **`LlmAgent`**        | 기본 에이전트 역할 및 하위 에이전트로의 작업 라우팅 (`sub_agents`, `description` 기반)   | Coordinator / Dispatcher                   | 사용자 의도를 파악해 적합한 전문 담당 에이전트로 연결        |
+| **`ParallelAgent`**   | 여러 작업을 병렬로 동시에 실행하고 마지막에 결과를 취합 (고유 `output_key` 지정)         | Parallel Fan-Out / Gather                  | 코드 리뷰 시 보안, 스타일, 성능 검사를 동시에 진행 후 종합   |
+| **`LoopAgent`**       | 특정 조건이 충족될 때까지 작업을 반복 실행 (`max_iterations`, `EventActions` 제어)       | Generator and Critic, Iterative Refinement | 초안 작성 후 검토 에이전트의 피드백을 받아 반복 수정         |
+| **`AgentTool`**       | 특정 에이전트 자체를 다른 에이전트가 호출할 수 있는 도구(Tool)로 래핑하여 위임           | Hierarchical Decomposition                 | 메인 리포트 에이전트가 필요할 때 전문 리서치 에이전트를 호출 |
 
 이번 Lab 3에서는 이 중에서 **`SequentialAgent`**를 활용 하겠습니다. `meeting_planner`가 모임 기획안을 먼저 작성하고, 그 결과물을 `design_expert`가 넘겨받아 테마 이미지를 생성하는 깔끔한 파이프라인을 만들어 봅시다.
 
@@ -191,7 +192,6 @@ adk run agents/lab3_meeting_agent
 
 ```text
 [user]: 제주도 워크샵을 올 해 겨울에 5명이 갈 예정인데 워크샵 초대에 어울리는 카드좀 기획해볼래?
-[user]: 제주도 워크샵을 올 해 겨울에 5명이 갈 예정인데 워크샵 초대에 어울리는 카드좀 기획해볼래?
 [meeting_planner]: 제주도 겨울 워크샵이라니 정말 설레는 계획이네요! 5명의 소규모 인원이니, 너무 딱딱하지 않으면서도 따뜻하고 끈끈한 팀워크를  다질 수 있는 컨셉의 초대장이 좋을 것 같습니다.
 
 모임 기획 매니저로서, 겨울 제주도의 감성을 담은 **워크샵 초대 카드 기획안 3가지**를 제안합니다.
@@ -220,11 +220,13 @@ adk run agents/lab3_meeting_agent
 웹 콘솔을 이용하면 여러 에이전트 간의 대화 흐름과 생성된 아티팩트를 직관적으로 확인할 수 있습니다.
 
 #### Step 1: 웹 콘솔 서버 실행
+
 ```bash
 adk web agents/
 ```
 
 #### Step 2: 브라우저 접속 및 에이전트 선택
+
 1. `http://127.0.0.1:8000`에 접속합니다.
 2. 좌측 메뉴에서 `lab3_meeting_agent`를 선택합니다.
 3. 메시지를 입력하는 창에 `"제주도 워크샵을 올 해 겨울에 5명이 갈 예정인데 워크샵 초대에 어울리는 카드좀 기획해볼래?"`라고 입력합니다.
