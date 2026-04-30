@@ -48,10 +48,10 @@ adk run agents/lab2_trip_agent \
 
 이 명령어의 의미는 다음과 같습니다.
 
-| 옵션 | 값 | 의미 |
-| :--- | :--- | :--- |
-| `--session_service_uri` | `sqlite://./outputs/session.db` | 세션 실행 기록을 SQLite 파일에 저장 |
-| `--memory_service_uri` | `memory://` | 기억 저장소는 로컬 인메모리 방식으로 사용 |
+| 옵션                    | 값                              | 의미                                      |
+| :---------------------- | :------------------------------ | :---------------------------------------- |
+| `--session_service_uri` | `sqlite://./outputs/session.db` | 세션 실행 기록을 SQLite 파일에 저장       |
+| `--memory_service_uri`  | `memory://`                     | 기억 저장소는 로컬 인메모리 방식으로 사용 |
 
 세션 저장소를 `session.db`로 선택한다고 해서 장기 기억을 지원하는 것은 아닙니다. 실제 대화 기록은 메모리 서비스를 이용하니 이 점을 헷갈리지 않게 주의해주세요.
 현재 예제에서는 `memory_service_uri="memory://"`를 사용합니다. 따라서 한번 진행한 대화를 이후 다시 ADK를 실행하여 확인할 경우 대화 기록이 사라지게 됩니다.
@@ -63,6 +63,7 @@ adk run agents/lab2_trip_agent \
 이런 개념들을 바탕으로 ADK는 두가지 저장 옵션을 제공합니다. 물론 두가지를 동시에 사용할 수도 있습니다.
 
 다시 개념을 정리해볼까요?
+
 - **session_service_uri**: 현재 대화의 이벤트와 상태를 관리합니다. 예를 들어 `memory://`는 휘발성 세션이고, `sqlite://./outputs/session.db`는 세션 이벤트를 로컬 파일에 저장합니다.
 - **memory_service_uri**: `PreloadMemoryTool`이나 `LoadMemoryTool`이 검색할 장기 기억 저장소를 연결합니다. 로컬 테스트에는 `memory://`를 사용할 수 있지만, 이 방식은 프로세스 종료 시 사라집니다. 재시작 후에도 유지되는 장기 기억은 `agentengine://<AGENT_ENGINE_ID>` 같은 장기 보관에 적합한 메모리 서비스가 필요합니다.
 
@@ -148,15 +149,15 @@ def build_trip_planner() -> LlmAgent:
 
 ADK의 메모리 서비스는 주로 다음과 같습니다.
 
-| 항목 | `InMemoryMemoryService` | `VertexAiMemoryBankService` | `VertexAiRagMemoryService` |
-| :--- | :--- | :--- | :--- |
-| 지속성 | 없음. 재시작하면 데이터가 사라짐 | 있음. Agent Platform에서 관리 | 있음. Knowledge Engine에 저장 |
-| 주요 사용 사례 | 프로토타이핑, 로컬 개발, 간단한 테스트 | 사용자 대화에서 의미 있는 기억을 만들고 지속적으로 발전시키는 에이전트 구축 | 전체 대화 코퍼스에 대한 벡터 검색 또는 다른 RAG 인덱싱 콘텐츠와 함께 검색 |
-| 메모리 추출 방식 | 전체 대화 저장 | 대화에서 의미 있는 정보를 추출하고 기존 기억과 통합. LLM 기반 | 전체 대화를 저장하고 Knowledge Engine으로 인덱싱 |
-| 검색 기능 | 기본 키워드 매칭 | 고급 의미 기반 검색 | Knowledge Engine 기반 벡터 유사도 검색 |
-| 설정 복잡도 | 없음. 기본값 | 낮음. Agent Platform의 Agent Runtime 인스턴스 필요 | 중간. Knowledge Engine 필요 |
-| 의존성 | 없음 | Google Cloud Project, Agent Platform API | Google Cloud Project, Knowledge Engine, Agent Platform SDK. 선택 설치 가능 |
-| 사용하기 좋은 경우 | 여러 세션의 채팅 기록을 로컬에서 간단히 검색해보고 싶을 때 | 에이전트가 과거 상호작용을 기억하고 학습하듯 반영하게 만들고 싶을 때 | 이미 RAG 인프라가 있거나 원본 대화 기록 전체를 대상으로 검색하고 싶을 때 |
+| 항목               | `InMemoryMemoryService`                                    | `VertexAiMemoryBankService`                                                 | `VertexAiRagMemoryService`                                                 |
+| :----------------- | :--------------------------------------------------------- | :-------------------------------------------------------------------------- | :------------------------------------------------------------------------- |
+| 지속성             | 없음. 재시작하면 데이터가 사라짐                           | 있음. Agent Platform에서 관리                                               | 있음. Knowledge Engine에 저장                                              |
+| 주요 사용 사례     | 프로토타이핑, 로컬 개발, 간단한 테스트                     | 사용자 대화에서 의미 있는 기억을 만들고 지속적으로 발전시키는 에이전트 구축 | 전체 대화 코퍼스에 대한 벡터 검색 또는 다른 RAG 인덱싱 콘텐츠와 함께 검색  |
+| 메모리 추출 방식   | 전체 대화 저장                                             | 대화에서 의미 있는 정보를 추출하고 기존 기억과 통합. LLM 기반               | 전체 대화를 저장하고 Knowledge Engine으로 인덱싱                           |
+| 검색 기능          | 기본 키워드 매칭                                           | 고급 의미 기반 검색                                                         | Knowledge Engine 기반 벡터 유사도 검색                                     |
+| 설정 복잡도        | 없음. 기본값                                               | 낮음. Agent Platform의 Agent Runtime 인스턴스 필요                          | 중간. Knowledge Engine 필요                                                |
+| 의존성             | 없음                                                       | Google Cloud Project, Agent Platform API                                    | Google Cloud Project, Knowledge Engine, Agent Platform SDK. 선택 설치 가능 |
+| 사용하기 좋은 경우 | 여러 세션의 채팅 기록을 로컬에서 간단히 검색해보고 싶을 때 | 에이전트가 과거 상호작용을 기억하고 학습하듯 반영하게 만들고 싶을 때        | 이미 RAG 인프라가 있거나 원본 대화 기록 전체를 대상으로 검색하고 싶을 때   |
 
 즉슨 `--memory_service_uri="memory://"` 옵션으로 실행하면 프로세스 안의 휘발성 메모리에 저장되고, 이후에 다룰 `--memory_service_uri="agentengine://..."` 등의 외부 메모리 서비스를 지정하면 외부 메모리 뱅크에 저장됩니다. [더 자세한 문서](https://adk.dev/sessions/memory/)를 살펴보세요.
 
@@ -305,8 +306,7 @@ adk run agents/lab2_trip_agent \
 ```bash
 adk web agents/ \
   --session_service_uri="sqlite://./outputs/session.db" \
-  --memory_service_uri="agentengine://1234567890123456789" \
-  --session_id="my_trip"
+  --memory_service_uri="agentengine://1234567890123456789"
 ```
 
 정상적으로 웹이 시작되었다면 브라우저에서 `http://127.0.0.1:8000`에 접속한 뒤 `trip_planner`를 선택하고 `"내가 아까 말했던 여행지에 어울리는 숙소도 추천해줄래?"`라고 물어신 후에 Trace 탭을 클릭해 보세요.
