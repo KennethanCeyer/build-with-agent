@@ -152,7 +152,7 @@ from google.adk.agents.callback_context import CallbackContext
 
 # 대화가 종료된 후 세션 데이터를 메모리 뱅크로 추출 및 저장하는 콜백 함수입니다.
 async def auto_save_session_to_memory_callback(callback_context: CallbackContext):
-    await callback_context.add_session_to_memory()
+    # ... (중략) ...
 
 def build_trip_planner() -> LlmAgent:
     return LlmAgent(
@@ -331,8 +331,7 @@ agentengine://projects/.../locations/asia-northeast3/reasoningEngines/1234567890
 
 ```bash
 adk run agents/lab2_trip_agent \
-  --memory_service_uri="agentengine://1234567890123456789" \
-  --session_id="my_trip"
+  --memory_service_uri="agentengine://1234567890123456789"
 ```
 
 이제 출력된 값을 `--memory_service_uri`에 넣어 실행한 뒤, 여행 계획에 대한 첫 번째 질문을 입력해 보세요.
@@ -353,11 +352,8 @@ adk run agents/lab2_trip_agent \
 
 ```bash
 adk run agents/lab2_trip_agent \
-  --memory_service_uri="agentengine://1234567890123456789" \
-  --session_id="my_trip"
+  --memory_service_uri="agentengine://1234567890123456789"
 ```
-
-동일한 세션 ID(`my_trip`)로 다시 접속한 뒤, 이전 대화 내용을 기억하고 있는지 확인하기 위한 추가 질문을 보내 봅니다.
 
 ```text
 [user]: 내 여행 취향에 맞는 숙소도 추천해줄래?

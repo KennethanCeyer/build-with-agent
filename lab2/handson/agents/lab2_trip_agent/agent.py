@@ -1,17 +1,46 @@
 from __future__ import annotations
 
 from google.genai import types
-
 from google.adk.agents import LlmAgent
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.tools.load_memory_tool import LoadMemoryTool  # noqa: F401
 from google.adk.tools.preload_memory_tool import PreloadMemoryTool  # noqa: F401
+import asyncio
+import copy
 
 from .tools import google_search
 
 
 async def auto_save_session_to_memory_callback(callback_context: CallbackContext):
     await callback_context.add_session_to_memory()
+    session_events = callback_context._invocation_context.session.events
+    filtered_events = []
+    for event in session_events:
+        if not event.content or not event.content.parts:
+            continue
+
+        valid_parts = []
+        for part in event.content.parts:
+            if not getattr(part, "tool_call", None) and not getattr(
+                part, "tool_response", None
+            ):
+                valid_parts.append(part)
+
+        if valid_parts:
+            new_event = copy.deepcopy(event)
+            new_event.content.parts = valid_parts
+            filtered_events.append(new_event)
+
+    await callback_context.add_events_to_memory(events=filtered_events)
+
+    try:
+        from google.adk.memory.vertex_ai_memory_bank_service import _background_tasks
+
+        tasks = [t for t in _background_tasks if not t.done()]
+        if tasks:
+            await asyncio.gather(*tasks, return_exceptions=True)
+    except ImportError:
+        pass
 
 
 def build_trip_planner() -> LlmAgent:
