@@ -8,13 +8,13 @@
 
 ```mermaid
 graph LR
-    User((사용자)) --> Agent[여행 비서 에이전트]
+    User((사용자)) --> Agent[여행 비서 LlmAgent]
     Agent -->|도구 호출| Read[메모 읽기]
     Agent -->|도구 호출| Save[일정 저장]
 ```
 
 > [!NOTE]
-> 에이전트 그래프: 요청이 처리되는 전체 구조를 뜻합니다. 사용자가 메시지를 보내면 에이전트가 상황을 판단하고, 실제 작업은 도구인 `read_trip_notes`와 `save_itinerary`에 맡기는 방식입니다.
+> 에이전트 그래프: 요청이 처리되는 전체 구조를 뜻합니다. 사용자가 메시지를 보내면 LlmAgent가 상황을 판단하고, 실제 작업은 도구인 `read_trip_notes`와 `save_itinerary`에 맡기는 방식입니다.
 
 에이전트는 모델이 모든 답을 직접 생성하는 대신, 상황에 맞는 도구를 선택해서 활용합니다. 파일 처리 작업은 Python 함수가 담당하고, 모델은 그 결과를 확인하며 다음 행동을 결정합니다.
 
@@ -41,20 +41,20 @@ GOOGLE_API_KEY=AIzaSy... (본인의 API 키 입력)
 본격적으로 코드를 수정하기 전에, 에이전트가 지금은 어떻게 동작하는지 먼저 확인해 보겠습니다.
 
 ```bash
-adk run agents/lab1_memo_agent
+adk run agents/lab1_trip_agent
 ```
 
 > [!TIP]
 > 이는 ADK의 일부 기능이 실험 단계임을 알리는 경고입니다. 실습을 진행하는 데는 아무런 지장이 없으니 안심하고 넘어가셔도 됩니다.
-> `Running agent lab1_memo_agent...` 메시지가 출력되고 대화가 시작된다면 정상적으로 실행된 것입니다.
+> `Running agent lab1_trip_agent...` 메시지가 출력되고 대화가 시작된다면 정상적으로 실행된 것입니다.
 
 대화 프롬프트에 `"여행 메모를 읽고 일정을 정리해 줘"`라고 입력해 볼까요? 현재는 지침이 비어 있어 메모 파일을 읽거나 결과를 저장하지 못하는 모습을 확인할 수 있습니다.
 
 ```text
-adk run agents/lab1_memo_agent
+adk run agents/lab1_trip_agent
 
 [user]: 여행 메모를 읽고 일정을 정리해 줘
-[lab1_memo_agent]: 네, 여행 메모를 바탕으로 일정을 정리해 드릴게요.
+[lab1_trip_agent]: 네, 여행 메모를 바탕으로 일정을 정리해 드릴게요.
 
 여행 메모를 여기에 붙여넣어 주시면 제가 읽고 깔끔하게 정리해 드리겠습니다! 어떤 형식으로 정리해 드릴까요? (예: 날짜별, 방문지별, 활동별 등)
 [user]: exit
@@ -74,7 +74,7 @@ adk run agents/lab1_memo_agent
 | :--- | :--- | :--- |
 | **계획 (Planning)** | `Instruction` | 작업 순서와 규칙을 정의하고 모델의 추론 방향을 설정합니다. |
 | **기억 (Memory)** | `Session`, `Memory` | 현재 대화의 상태를 유지하거나 과거 기록을 검색하여 답변에 반영합니다. |
-| **도구 (Tools)** | `Function Call` | 파일 시스템 접근, API 호출 등 모델이 직접 수행할 수 없는 외부 작업을 처리합니다. |
+| **도구 (Tools)** | `Function Call` | LlmAgent가 직접 수행할 수 없는 외부 작업을 처리합니다. |
 
 
 에이전트가 도구를 정확하게 이해하도록 함수의 이름, 타입 힌트, 그리고 설명을 작성해 주세요. ADK는 이 정보를 읽어서 모델이 이해할 수 있는 형태로 자동 변환합니다. 실습에 사용할 도구는 `tools.py`에 준비되어 있습니다. `read_trip_notes`는 메모 파일을 읽어오고, `save_itinerary`는 정리된 내용을 파일로 저장하는 기능을 합니다.
@@ -84,7 +84,7 @@ adk run agents/lab1_memo_agent
 ```python
 def build_travel_agent() -> LlmAgent:
     return LlmAgent(
-        name="lab1_memo_agent",
+        name="lab1_trip_agent",
         model="gemini-3-flash-preview",
         instruction=(
             "여행 메모를 읽고 일정을 정리해 저장하는 비서입니다. "
@@ -105,16 +105,16 @@ Instruction에 작업 순서를 명확하게 적어주면 에이전트가 도구
 수정한 코드가 의도대로 동작하는지 다시 한번 확인해 보겠습니다.
 
 ```bash
-adk run agents/lab1_memo_agent
+adk run agents/lab1_trip_agent
 ```
 
 이전과 똑같이 요청을 보내 볼까요? 메모를 읽고 파일을 저장하는 흐름이 자연스럽게 진행된다면 성공입니다!
 
 ```text
-adk run agents/lab1_memo_agent
+adk run agents/lab1_trip_agent
 
 [user]: 여행 메모를 읽고 일정을 정리해 줘
-[lab1_memo_agent]: 제주도 3박 4일 여행 일정을 다음과 같이 정리했습니다.
+[lab1_trip_agent]: 제주도 3박 4일 여행 일정을 다음과 같이 정리했습니다.
 
 ---
 
@@ -128,10 +128,10 @@ adk run agents/lab1_memo_agent
 
 이 내용을 파일로 저장할까요? 혹시 3일차와 4일차에 추가하고 싶은 내용이 있다면 알려주세요!
 [user]: 저장해줄래?
-[lab1_memo_agent]: 일정을 성공적으로 저장했습니다! (`outputs/trip-plan.md`)
+[lab1_trip_agent]: 일정을 성공적으로 저장했습니다! (`outputs/trip-plan.md`)
 
 나중에 3일차와 4일차 계획이 생기면 언제든 말씀해 주세요. 내용을 수정해서 다시 저장해 드릴게요.
-[lab1_memo_agent]: exit
+[lab1_trip_agent]: exit
 ```
 
 모든 작업이 문제 없이 완료되었다면, `outputs` 폴더 안에 `trip-plan.md` 파일이 정상적으로 저장된 것을 확인할 수 있습니다.
@@ -167,7 +167,7 @@ adk web agents/ --host 0.0.0.0 --allow_origins="*"
 
 #### Step 2: 브라우저 접속 및 에이전트 선택
 1. 앞서 실행한 터미널에 표시된 `http://127.0.0.1:8000` 주소를 클릭하거나 브라우저에 직접 입력하여 접속합니다.
-2. 좌측 상단 메뉴에서 `lab1_memo_agent`를 선택합니다. (다음 이미지를 참고하세요.)
+2. 좌측 상단 메뉴에서 `lab1_trip_agent`를 선택합니다. (다음 이미지를 참고하세요.)
 
 ![ADK Web 에이전트 선택](../assets/lab1-adk-web-left-agent-dropdown.png)
 

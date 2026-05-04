@@ -151,12 +151,12 @@ ADK의 메모리 서비스는 주로 다음과 같습니다.
 
 | 항목               | `InMemoryMemoryService`                                    | `VertexAiMemoryBankService`                                                 | `VertexAiRagMemoryService`                                                 |
 | :----------------- | :--------------------------------------------------------- | :-------------------------------------------------------------------------- | :------------------------------------------------------------------------- |
-| 지속성             | 없음. 재시작하면 데이터가 사라짐                           | 있음. Agent Platform에서 관리                                               | 있음. Knowledge Engine에 저장                                              |
+| 지속성             | 없음. 재시작하면 데이터가 사라짐                           | 있음. LlmAgent Platform에서 관리                                               | 있음. Knowledge Engine에 저장                                              |
 | 주요 사용 사례     | 프로토타이핑, 로컬 개발, 간단한 테스트                     | 사용자 대화에서 의미 있는 기억을 만들고 지속적으로 발전시키는 에이전트 구축 | 전체 대화 코퍼스에 대한 벡터 검색 또는 다른 RAG 인덱싱 콘텐츠와 함께 검색  |
 | 메모리 추출 방식   | 전체 대화 저장                                             | 대화에서 의미 있는 정보를 추출하고 기존 기억과 통합. LLM 기반               | 전체 대화를 저장하고 Knowledge Engine으로 인덱싱                           |
 | 검색 기능          | 기본 키워드 매칭                                           | 고급 의미 기반 검색                                                         | Knowledge Engine 기반 벡터 유사도 검색                                     |
-| 설정 복잡도        | 없음. 기본값                                               | 낮음. Agent Platform의 Agent Runtime 인스턴스 필요                          | 중간. Knowledge Engine 필요                                                |
-| 의존성             | 없음                                                       | Google Cloud Project, Agent Platform API                                    | Google Cloud Project, Knowledge Engine, Agent Platform SDK. 선택 설치 가능 |
+| 설정 복잡도        | 없음. 기본값                                               | 낮음. LlmAgent Platform의 LlmAgent Runtime 인스턴스 필요                          | 중간. Knowledge Engine 필요                                                |
+| 의존성             | 없음                                                       | Google Cloud Project, LlmAgent Platform API                                    | Google Cloud Project, Knowledge Engine, LlmAgent Platform SDK. 선택 설치 가능 |
 | 사용하기 좋은 경우 | 여러 세션의 채팅 기록을 로컬에서 간단히 검색해보고 싶을 때 | 에이전트가 과거 상호작용을 기억하고 학습하듯 반영하게 만들고 싶을 때        | 이미 RAG 인프라가 있거나 원본 대화 기록 전체를 대상으로 검색하고 싶을 때   |
 
 즉슨 `--memory_service_uri="memory://"` 옵션으로 실행하면 프로세스 안의 휘발성 메모리에 저장되고, 이후에 다룰 `--memory_service_uri="agentengine://..."` 등의 외부 메모리 서비스를 지정하면 외부 메모리 뱅크에 저장됩니다. [더 자세한 문서](https://adk.dev/sessions/memory/)를 살펴보세요.
@@ -197,7 +197,7 @@ adk run agents/lab2_trip_agent --memory_service_uri="memory://"
 [lab2_trip_agent]: 죄송하지만 현재 제가 이전 대화 내용이 초기화되어, 아까 말씀 나누셨던 조용한 바다가 정확히 어느 지역이었는지 기억하지 못하고 있습니다.
 ```
 
-그러면 장기 기억을 활용하기 위해서는 어떻게 해야할까요? 바로 장기 기억을 위한 메모리 서비스를 연결해야 합니다. [에이전트 확장](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale?hl=ko) 개념을 이용하면 기존의 Agent에 여러 기능을 추가하여 확장할 수 있습니다.
+그러면 장기 기억을 활용하기 위해서는 어떻게 해야할까요? 바로 장기 기억을 위한 메모리 서비스를 연결해야 합니다. [에이전트 확장](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale?hl=ko) 개념을 이용하면 기존의 LlmAgent에 여러 기능을 추가하여 확장할 수 있습니다.
 
 ### 에이전트 엔진 추가하기
 
