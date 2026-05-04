@@ -21,13 +21,10 @@ graph LR
 
 ```bash
 cd lab3/handson
-# 기존에 활성화된 가상환경이 있다면 비활성화합니다.
-deactivate 2>/dev/null 
-# 새로운 가상환경을 생성하고 활성화합니다.
-python3 -m venv .venv
+python -m venv .venv
 source .venv/bin/activate
-python3 -m pip install --upgrade pip
-python3 -m pip install -e .
+python -m pip install --upgrade pip
+python -m pip install -e .
 ```
 
 가상환경 활성화 후에는 워크스페이스 루트의 `.env` 파일에 API 키가 설정되어 있는지 확인합니다.
@@ -106,7 +103,7 @@ design_expert = LlmAgent(
 ```python
 def build_meeting_manager() -> SequentialAgent:
     return SequentialAgent(
-        name="lab3_meeting_agent",
+        name="root_agent",
         sub_agents=[
             meeting_planner,
             design_expert,
