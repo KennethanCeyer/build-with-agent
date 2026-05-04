@@ -201,9 +201,17 @@ return LlmAgent(
         # 명시적인 호출이 없는 한 이 도구는 사용되지 않습니다.
         LoadMemoryTool(),
 
-        # PreloadMemoryTool은 시작과 매번 대화 과정에 자동으로 실행하여 메모리에서 정보를 불러옵니다.
-        PreloadMemoryTool(),
-    ],
+> [!CAUTION]
+> `LoadMemoryTool()`과 `PreloadMemoryTool()`이 `tools` 리스트에 포함되어 있지 않거나 주석 처리되어 있으면, 에이전트가 메모리 서비스를 통해 과거 정보를 읽어올 수 없습니다. 장기 기억 기능을 테스트하기 전에 반드시 주석을 제거했는지 확인하세요.
+
+```python
+        tools=[
+            google_search,
+            # 아래 도구들의 주석을 반드시 제거하세요.
+            LoadMemoryTool(),
+            PreloadMemoryTool(),
+        ],
+```
     generate_content_config=types.GenerateContentConfig(
         tool_config=types.ToolConfig(include_server_side_tool_invocations=True),
     ),
@@ -283,6 +291,8 @@ vertexai.init(project=project, location=location)
 # display_name을 지정하여 리소스에 이름을 부여할 수 있습니다.
 agent_engine = agent_engines.create(display_name="lab2_memory_bank")
 
+print("")
+
 print("Agent Engine resource name:")
 print(agent_engine.resource_name)
 
@@ -294,11 +304,22 @@ PY
 출력은 대략 다음과 같은 형식입니다.
 
 ```text
+Identified the following requirements: {'pydantic': '2.13.3', 'cloudpickle': '3.1.2'}
+The following requirements are missing: {'pydantic', 'cloudpickle'}
+The following requirements are appended: {'pydantic==2.13.3', 'cloudpickle==3.1.2'}
+The final list of requirements: ['pydantic==2.13.3', 'cloudpickle==3.1.2']
+Creating AgentEngine
+Create AgentEngine backing LRO: projects/.../locations/asia-northeast3/reasoningEngines/1234567890123456789/operations/...
+View progress and logs at https://console.cloud.google.com/logs/query?project=gde-project-aicloud
+AgentEngine created. Resource name: projects/.../locations/asia-northeast3/reasoningEngines/1234567890123456789
+To use this AgentEngine in another session:
+agent_engine = vertexai.agent_engines.get('projects/.../locations/asia-northeast3/reasoningEngines/1234567890123456789')
+
 Agent Engine resource name:
-projects/your-gcp-project-id/locations/asia-northeast3/reasoningEngines/1234567890123456789
+projects/.../locations/asia-northeast3/reasoningEngines/1234567890123456789
 
 Use this with ADK:
-agentengine://projects/your-gcp-project-id/locations/asia-northeast3/reasoningEngines/1234567890123456789
+agentengine://projects/.../locations/asia-northeast3/reasoningEngines/1234567890123456789
 ```
 
 이제 출력된 값을 `--memory_service_uri`에 넣어 실행합니다.
@@ -308,7 +329,7 @@ agentengine://projects/your-gcp-project-id/locations/asia-northeast3/reasoningEn
 
 ```bash
 adk run agents/lab2_trip_agent \
-  --session_service_uri="sqlite://./outputs/session.db" \
+  --session_service_uri="agentengine://1234567890123456789" \
   --memory_service_uri="agentengine://1234567890123456789" \
   --session_id="my_trip"
 ```
@@ -334,7 +355,7 @@ adk run agents/lab2_trip_agent \
 
 ```bash
 adk run agents/lab2_trip_agent \
-  --session_service_uri="sqlite://./outputs/session.db" \
+  --session_service_uri="agentengine://1234567890123456789" \
   --memory_service_uri="agentengine://1234567890123456789" \
   --session_id="my_trip"
 ```
