@@ -253,7 +253,7 @@ adk run agents/lab2_trip_agent --memory_service_uri="memory://"
 
 ### 에이전트 엔진 추가하기
 
-이 과정을 위해서는 구글 클라우드 계정과 `gcloud cli`가 필요합니다. (Google Cloud의 cloudshell 환경으로 실행하시는 경우 `gcloud cli`가 미리 설치되어 있고 별도의 로그인이 필요하지 않습니다.)
+이 과정을 위해서는 구글 클라우드 계정과 `gcloud cli`가 필요합니다.
 
 - [Google Cloud CLI 설치 가이드](https://docs.cloud.google.com/sdk/docs/install-sdk?hl=ko)
 
@@ -275,6 +275,10 @@ export GOOGLE_CLOUD_LOCATION="asia-northeast3"
 ```bash
 python -m pip install "google-cloud-aiplatform>=1.140.0"
 ```
+
+이번 실습에서는 [Vertex AI](https://cloud.google.com/vertex-ai)의 [Agent Engine](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale?hl=ko)을 사용합니다. 이를 위해 Agent Platform API의 사용 권한을 활성화해야합니다. 아래 링크를 참고하여 권한을 활성화해보세요.
+
+- [Agent Platform API 활성화](https://console.cloud.google.com/marketplace/product/google/aiplatform.googleapis.com)
 
 이제 에이전트 런타임을 생성하기 위해 아래 코드를 실행해보세요.
 
@@ -323,8 +327,6 @@ projects/.../locations/asia-northeast3/reasoningEngines/1234567890123456789
 Use this with ADK:
 agentengine://projects/.../locations/asia-northeast3/reasoningEngines/1234567890123456789
 ```
-
-이제 출력된 값을 `--memory_service_uri`에 넣어 실행합니다.
 
 > [!NOTE]
 > `memory_service_uri`의 `agentengine://`에 여러분이 생성한 에이전트 엔진의 ID로 꼭 바꾸어주세요! (projects/.../locations/asia-northeast3/reasoningEngines/1234567890123456789 전체를 넣거나, 가장 뒷 부분에 위치한 숫자만 복사 & 붙여넣기 하셔도 됩니다.)
@@ -383,6 +385,10 @@ return LlmAgent(
     ...
 )
 ```
+
+만약 에이전트가 이전 맥락을 가져오는 데 성공하였다면, [Agent Engine의 Memory Bank](https://console.cloud.google.com/agent-platform/memory-bank)에 접속하여 저장된 기억을 확인 할 수 있습니다.
+
+![Agent Engine Memory Bank](../assets/lab2-agent-engine-memory-bank.png)
 
 ### ADK 웹 콘솔에서 확인하기
 
