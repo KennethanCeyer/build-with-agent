@@ -41,7 +41,7 @@ GOOGLE_API_KEY=AIzaSy... (본인의 API 키 입력)
 본격적으로 코드를 수정하기 전에, 에이전트가 지금은 어떻게 동작하는지 먼저 확인해 보겠습니다.
 
 ```bash
-adk run agents/lab1_trip_agent
+adk run agents/lab1_memo_agent
 ```
 
 > [!TIP]
@@ -51,7 +51,7 @@ adk run agents/lab1_trip_agent
 대화 프롬프트에 `"여행 메모를 읽고 일정을 정리해 줘"`라고 입력해 볼까요? 현재는 지침이 비어 있어 메모 파일을 읽거나 결과를 저장하지 못하는 모습을 확인할 수 있습니다.
 
 ```text
-adk run agents/lab1_trip_agent
+adk run agents/lab1_memo_agent
 
 [user]: 여행 메모를 읽고 일정을 정리해 줘
 [lab1_trip_agent]: 네, 여행 메모를 바탕으로 일정을 정리해 드릴게요.
@@ -105,13 +105,13 @@ Instruction에 작업 순서를 명확하게 적어주면 에이전트가 도구
 수정한 코드가 의도대로 동작하는지 다시 한번 확인해 보겠습니다.
 
 ```bash
-adk run agents/lab1_trip_agent
+adk run agents/lab1_memo_agent
 ```
 
 이전과 똑같이 요청을 보내 볼까요? 메모를 읽고 파일을 저장하는 흐름이 자연스럽게 진행된다면 성공입니다!
 
 ```text
-adk run agents/lab1_trip_agent
+adk run agents/lab1_memo_agent
 
 [user]: 여행 메모를 읽고 일정을 정리해 줘
 [lab1_trip_agent]: 제주도 3박 4일 여행 일정을 다음과 같이 정리했습니다.

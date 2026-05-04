@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from lab1_trip_agent.tools import read_trip_notes, save_itinerary
+from lab1_memo_agent.tools import read_trip_notes, save_itinerary
 
 
 def test_read_trip_notes_reads_existing_note(tmp_path, monkeypatch):

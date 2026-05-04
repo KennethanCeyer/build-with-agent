@@ -1,11 +1,11 @@
 from google.adk.agents import LlmAgent
 
-from lab1_trip_agent.agent import root_agent
+from lab1_memo_agent.agent import root_agent
 
 
 def test_agent_structure():
     assert isinstance(root_agent, LlmAgent)
-    assert root_agent.name == "lab1_trip_agent"
+    assert root_agent.name == "lab1_memo_agent"
     assert root_agent.model == "gemini-3-flash-preview"
     assert len(root_agent.tools) == 2
 

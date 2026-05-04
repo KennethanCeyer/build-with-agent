@@ -7,7 +7,7 @@ from .tools import read_trip_notes, save_itinerary
 
 def build_travel_agent() -> LlmAgent:
     return LlmAgent(
-        name="lab1_trip_agent",
+        name="lab1_memo_agent",
         model="gemini-3-flash-preview",
         instruction="당신은 여행 메모를 읽고 일정을 정리하여 저장하는 비서입니다.",
         tools=[
