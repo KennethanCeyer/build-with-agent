@@ -13,8 +13,8 @@ from .tools import (  # noqa: F401
 
 def build_trip_planner() -> LlmAgent:
     return LlmAgent(
-        name="trip_planner",
-        model="gemini-3.1-pro-preview",
+        name="lab2_trip_agent",
+        model="gemini-3-flash-preview",
         # TODO 1: 지침을 작성하세요.
         # 힌트: 웹 검색과 기억을 활용해 여행 계획을 세우는 플래너의 역할과 지침을 명시하세요.
         instruction=("당신은 ... 입니다. ... 하세요."),

@@ -84,7 +84,7 @@ adk run agents/lab2_trip_agent \
 잠시 뒤 다음과 같이 답변이 오면 `exit`를 눌러 대화를 종료하세요.
 
 ```text
-[trip_planner]: 사람 북적이는 곳을 벗어나 조용히 파도 소리만 들으며 쉬고 싶으시군요! 강원도 고성의 가진해변을 추천해 드립니다.
+[lab2_trip_agent]: 사람 북적이는 곳을 벗어나 조용히 파도 소리만 들으며 쉬고 싶으시군요! 강원도 고성의 가진해변을 추천해 드립니다.
 [user]: exit
 ```
 
@@ -126,8 +126,8 @@ Memory Service에서 관련 기억 검색
 ```python
 def build_trip_planner() -> LlmAgent:
     return LlmAgent(
-        name="trip_planner",
-        model="gemini-3.1-pro-preview",
+        name="lab2_trip_agent",
+        model="gemini-3-flash-preview",
 
         # TODO 1: 지침을 작성하세요.
         # 힌트: 웹 검색과 기억을 활용해 여행 계획을 세우는 플래너의 역할과 지침을 명시하세요.
@@ -163,8 +163,8 @@ ADK의 메모리 서비스는 주로 다음과 같습니다.
 
 ```python
 return LlmAgent(
-    name="trip_planner",
-    model="gemini-3.1-pro-preview",
+    name="lab2_trip_agent",
+    model="gemini-3-flash-preview",
     instruction=(
         "실시간 웹 검색과 이전 대화 기억을 활용해 "
         "사용자 맞춤 여행 계획을 세우는 플래너입니다.\n"
@@ -194,7 +194,7 @@ adk run agents/lab2_trip_agent --memory_service_uri="memory://"
 
 ```text
 [user]: 아까 말한 조용한 바다 근처로 숙소도 같이 추천해줄래?
-[trip_planner]: 죄송하지만 현재 제가 이전 대화 내용이 초기화되어, 아까 말씀 나누셨던 조용한 바다가 정확히 어느 지역이었는지 기억하지 못하고 있습니다.
+[lab2_trip_agent]: 죄송하지만 현재 제가 이전 대화 내용이 초기화되어, 아까 말씀 나누셨던 조용한 바다가 정확히 어느 지역이었는지 기억하지 못하고 있습니다.
 ```
 
 그러면 장기 기억을 활용하기 위해서는 어떻게 해야할까요? 바로 장기 기억을 위한 메모리 서비스를 연결해야 합니다. [에이전트 확장](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale?hl=ko) 개념을 이용하면 기존의 Agent에 여러 기능을 추가하여 확장할 수 있습니다.
@@ -270,13 +270,17 @@ adk run agents/lab2_trip_agent \
 
 ```text
 [user]: 8월 초에 강원도 양양으로 2박 3일 여행 가려고 하는데, 거기에서 즐길 거리가 뭐가 있을까?
-[trip_planner]: 수석 플래너입니다! 이전에 말씀해 주셨던 **'8월 초 양양 2박 3일 여행'** 일정을 잘 기억하고 있습니다.
+[lab2_trip_agent]: 수석 플래너입니다! 이전에 말씀해 주셨던 **'8월 초 양양 2박 3일 여행'** 일정을 잘 기억하고 있습니다.
 
 8월 초의 양양은 여름휴가의 절정을 맞이하여 활기찬 분위기와 청정한 자연 을 동시에 누릴 수 있는 최고의 여행지입니다. 일정에 맞춰 다채롭게 즐기실 수 있는 양양의 대표적인 즐길 거리들을 테마별로 정리해 드립니다. (... 후략)
 [user]: exit
 ```
 
-대화를 `exit`를 입력해 종료했다면, 같은 세션 ID로 대화를 다시 이어서 해보겠습니다.
+대화를 `exit`를 입력해 종료했다면, 같은 세션 ID로 대화를 다시 이어서 해봅시다.
+
+> [!NOTE]
+> `memory_service_uri`의 `agentengine://`에 여러분이 생성한 에이전트 엔진의 ID로 꼭 바꾸어주세요!
+> 또한 `session_id`를 다르게 설정하면 완전히 새로운 대화가 시작되게 됩니다. 기존에 대화를 나눴던 `session_id`와 동일하게 맞춰 실행하면 이전 대화를 이어서 할 수 있습니다.
 
 ```bash
 adk run agents/lab2_trip_agent \
@@ -289,7 +293,7 @@ adk run agents/lab2_trip_agent \
 
 ```text
 [user]: 내가 아까 말했던 여행지에 어울리는 숙소도 추천해줄래?
-[trip_planner]: 이전에 말씀해주신 **8월 초 강원도 양양 2박 3일 여행**에 딱 맞는 숙소들을 추천해 드릴게요!
+[lab2_trip_agent]: 이전에 말씀해주신 **8월 초 강원도 양양 2박 3일 여행**에 딱 맞는 숙소들을 추천해 드릴게요!
 
 8월의 양양은 서핑과 해수욕, 그리고 특유의 힙한 분위기를 즐기기 가장 좋 은 성수기입니다. 여행 스타일과 취향에 맞춰 선택하실 수 있도록 네 가지  테마로 나누어 엄선해 보았습니다. (... 후략)
 [user]: exit
@@ -304,12 +308,12 @@ adk run agents/lab2_trip_agent \
 웹 콘솔에서도 같은 방식으로 사용할 수 있습니다.
 
 ```bash
-adk web agents/ \
+adk web agents/ --host 0.0.0.0 --allow_origins="*" \
   --session_service_uri="sqlite://./outputs/session.db" \
   --memory_service_uri="agentengine://1234567890123456789"
 ```
 
-정상적으로 웹이 시작되었다면 브라우저에서 `http://127.0.0.1:8000`에 접속한 뒤 `trip_planner`를 선택하고 `"내가 아까 말했던 여행지에 어울리는 숙소도 추천해줄래?"`라고 물어신 후에 Trace 탭을 클릭해 보세요.
+정상적으로 웹이 시작되었다면 브라우저에서 `http://127.0.0.1:8000`에 접속한 뒤 `lab2_trip_agent`를 선택하고 `"내가 아까 말했던 여행지에 어울리는 숙소도 추천해줄래?"`라고 물어신 후에 Trace 탭을 클릭해 보세요.
 
 `PreloadMemoryTool` 또는 `LoadMemoryTool`이 메모리 서비스에서 관련 기억을 가져오는지 확인할 수 있습니다.
 

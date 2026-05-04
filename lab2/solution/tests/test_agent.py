@@ -7,8 +7,8 @@ from lab2_trip_agent.agent import root_agent
 
 def test_agent_structure():
     assert isinstance(root_agent, LlmAgent)
-    assert root_agent.name == "trip_planner"
-    assert root_agent.model == "gemini-3.1-pro-preview"
+    assert root_agent.name == "lab2_trip_agent"
+    assert root_agent.model == "gemini-3-flash-preview"
     assert len(root_agent.tools) == 3
 
     tool_names = [getattr(tool, "__name__", getattr(tool, "name", "")) for tool in root_agent.tools]

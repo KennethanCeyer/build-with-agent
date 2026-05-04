@@ -103,7 +103,7 @@ design_expert = LlmAgent(
 ```python
 def build_meeting_manager() -> SequentialAgent:
     return SequentialAgent(
-        name="root_agent",
+        name="lab3_meeting_agent",
         sub_agents=[
             meeting_planner,
             design_expert,
@@ -222,7 +222,7 @@ adk run agents/lab3_meeting_agent
 #### Step 1: 웹 콘솔 서버 실행
 
 ```bash
-adk web agents/
+adk web agents/ --host 0.0.0.0 --allow_origins="*"
 ```
 
 #### Step 2: 브라우저 접속 및 에이전트 선택

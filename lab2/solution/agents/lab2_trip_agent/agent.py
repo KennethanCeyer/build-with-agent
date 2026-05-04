@@ -13,8 +13,8 @@ from .tools import (
 
 def build_trip_planner() -> LlmAgent:
     return LlmAgent(
-        name="trip_planner",
-        model="gemini-3.1-pro-preview",
+        name="lab2_trip_agent",
+        model="gemini-3-flash-preview",
         instruction=(
             "당신은 실시간 웹 검색과 이전 대화 기억을 활용하여 "
             "사용자 맞춤형 여행 계획을 수립하는 수석 플래너입니다.\n"

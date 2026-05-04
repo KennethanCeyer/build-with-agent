@@ -7,7 +7,7 @@ from lab3_meeting_agent.agent import (
 
 def test_agent_structure():
     assert isinstance(root_agent, SequentialAgent)
-    assert root_agent.name == "root_agent"
+    assert root_agent.name == "lab3_meeting_agent"
     assert len(root_agent.sub_agents) == 3
 
     sub_agent_names = [agent.name for agent in root_agent.sub_agents]

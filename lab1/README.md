@@ -46,7 +46,7 @@ adk run agents/lab1_memo_agent
 
 > [!TIP]
 > 이는 ADK의 일부 기능이 실험 단계임을 알리는 경고입니다. 실습을 진행하는 데는 아무런 지장이 없으니 안심하고 넘어가셔도 됩니다.
-> `Running agent trip_memo_agent...` 메시지가 출력되고 대화가 시작된다면 정상적으로 실행된 것입니다.
+> `Running agent lab1_memo_agent...` 메시지가 출력되고 대화가 시작된다면 정상적으로 실행된 것입니다.
 
 대화 프롬프트에 `"여행 메모를 읽고 일정을 정리해 줘"`라고 입력해 볼까요? 현재는 지침이 비어 있어 메모 파일을 읽거나 결과를 저장하지 못하는 모습을 확인할 수 있습니다.
 
@@ -54,7 +54,7 @@ adk run agents/lab1_memo_agent
 adk run agents/lab1_memo_agent
 
 [user]: 여행 메모를 읽고 일정을 정리해 줘
-[trip_memo_agent]: 네, 여행 메모를 바탕으로 일정을 정리해 드릴게요.
+[lab1_memo_agent]: 네, 여행 메모를 바탕으로 일정을 정리해 드릴게요.
 
 여행 메모를 여기에 붙여넣어 주시면 제가 읽고 깔끔하게 정리해 드리겠습니다! 어떤 형식으로 정리해 드릴까요? (예: 날짜별, 방문지별, 활동별 등)
 [user]: exit
@@ -84,8 +84,8 @@ adk run agents/lab1_memo_agent
 ```python
 def build_travel_agent() -> LlmAgent:
     return LlmAgent(
-        name="trip_memo_agent",
-        model="gemini-3.1-flash-lite-preview",
+        name="lab1_memo_agent",
+        model="gemini-3-flash-preview",
         instruction=(
             "여행 메모를 읽고 일정을 정리해 저장하는 비서입니다. "
             "먼저 read_trip_notes 도구로 메모 내용을 확인하고, "
@@ -114,7 +114,7 @@ adk run agents/lab1_memo_agent
 adk run agents/lab1_memo_agent
 
 [user]: 여행 메모를 읽고 일정을 정리해 줘
-[trip_memo_agent]: 제주도 3박 4일 여행 일정을 다음과 같이 정리했습니다.
+[lab1_memo_agent]: 제주도 3박 4일 여행 일정을 다음과 같이 정리했습니다.
 
 ---
 
@@ -128,10 +128,10 @@ adk run agents/lab1_memo_agent
 
 이 내용을 파일로 저장할까요? 혹시 3일차와 4일차에 추가하고 싶은 내용이 있다면 알려주세요!
 [user]: 저장해줄래?
-[trip_memo_agent]: 일정을 성공적으로 저장했습니다! (`outputs/trip-plan.md`)
+[lab1_memo_agent]: 일정을 성공적으로 저장했습니다! (`outputs/trip-plan.md`)
 
 나중에 3일차와 4일차 계획이 생기면 언제든 말씀해 주세요. 내용을 수정해서 다시 저장해 드릴게요.
-[user]: exit
+[lab1_memo_agent]: exit
 ```
 
 모든 작업이 문제 없이 완료되었다면, `outputs` 폴더 안에 `trip-plan.md` 파일이 정상적으로 저장된 것을 확인할 수 있습니다.
@@ -147,14 +147,29 @@ cat outputs/trip-plan.md
 #### Step 1: 웹 콘솔 서버 실행
 터미널에서 아래 명령어를 실행하여 웹 서버를 가동합니다. 에이전트가 포함된 디렉토리를 지정해야 합니다.
 ```bash
-adk web agents/
+adk web agents/ --host 0.0.0.0 --allow_origins="*"
 ```
 
-> 주의 사항: `adk web`은 보통 `8000` 포트로 실행됩니다. 만약 다른 프로그램이 이미 `8000` 포트를 사용 중이라면, `adk web agents/ --port 8080`과 같이 다른 포트를 지정해야 합니다. 웹 브라우저에서 `http://127.0.0.1:8000` 주소를 클릭하거나 브라우저에 직접 입력하여 접속합니다. 
+`adk web` 명령어를 통해 에이전트를 브라우저를 통해 UI로 직관적으로 살펴보며 확인할 수 있습니다. adk web을 사용하면 다음과 같은 이점을 얻을 수 있습니다.
+
+- 다양한 형태의 에이전트 아키텍처 흐름을 그래프 형태로 시각적으로 제공합니다. 
+- 추적(Trace) 기능을 통해 에이전트의 내부 동작을 단계별로 확인할 수 있습니다. 이를 이용해 디버깅이 용이합니다.
+
+또한 `adk web`에 옵션을 붙여 사용했는데, 그 의미는 다음과 같습니다.
+
+| 옵션 | 역할 | 설정 이유 |
+| :--- | :--- | :--- |
+| --host 0.0.0.0 | 서버가 모든 네트워크 인터페이스의 요청을 수신하도록 설정 | Cloud Shell 프록시를 통한 외부 접속을 허용합니다. |
+| --allow_origins="*" | 브라우저의 교차 출처 리소스 공유 제한 해제 | Cloud Shell 웹 미리보기와 서버 주소 불일치로 인한 통신 차단을 문제를 예방합니다. |
+
+> 주의 사항: `adk web`은 보통 `8000` 포트로 실행됩니다.
+ 만약 다른 프로그램이 이미 `8000` 포트를 사용 중이라면, `adk web agents/ --host 0.0.0.0 --allow_origins="*" --port 8080`과 같이 다른 포트를 지정해야 합니다. 웹 브라우저에서 `http://127.0.0.1:8000` 주소를 클릭하거나 브라우저에 직접 입력하여 접속합니다. 
 
 #### Step 2: 브라우저 접속 및 에이전트 선택
 1. 앞서 실행한 터미널에 표시된 `http://127.0.0.1:8000` 주소를 클릭하거나 브라우저에 직접 입력하여 접속합니다.
-2. 좌측 상단 메뉴에서 `trip_memo_agent`를 선택합니다.
+2. 좌측 상단 메뉴에서 `lab1_memo_agent`를 선택합니다. (다음 이미지를 참고하세요.)
+
+![ADK Web 에이전트 선택](../assets/lab1-adk-web-left-agent-dropdown.png)
 
 #### Step 3: 대화 및 도구 호출 확인
 브라우저에 보이는 메시지 입력창에 아래 메시지를 입력하고 에이전트의 결과를 살펴보세요.
