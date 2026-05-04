@@ -8,9 +8,9 @@ version = "0.1.0"
 description = "Beginner Gemini agent lab handson"
 requires-python = ">=3.11"
 dependencies = [
-  "google-genai==1.70.0",
+  "google-genai>=1.70.0",
   "pydantic-settings>=2.10,<3.0",
-  "google-adk==1.28.1",
+  "google-adk>=1.30.0",
 ]
 
 [project.optional-dependencies]
