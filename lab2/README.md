@@ -288,8 +288,8 @@ location = os.environ["GOOGLE_CLOUD_LOCATION"]
 vertexai.init(project=project, location=location)
 
 # 에이전트 엔진을 생성합니다. 
-# display_name을 지정하여 리소스에 이름을 부여할 수 있습니다.
-agent_engine = agent_engines.create(display_name="lab2_trip_agent")
+# name을 지정하여 리소스에 이름을 부여할 수 있습니다.
+agent_engine = agent_engines.create(name="lab2_trip_agent")
 
 print("")
 
