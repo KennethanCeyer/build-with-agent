@@ -263,7 +263,7 @@ export GOOGLE_CLOUD_LOCATION="asia-northeast3"
 메모리 뱅크를 사용하기 위해서는 에이전트 런타임이 필요합니다. 에이전트 런타임을 생성하기 위해 에이전트 플랫폼 SDK을 설치해주세요. 에이전트 플랫폼이란 구글 클라우드에서 제공하는 에이전트 개발 전반에 필요한 여러 클라우드 자원을 통합적으로 관리할 수 있게 해주는 플랫폼입니다.
 
 ```bash
-python -m pip install "google-cloud-aiplatform>=1.111.0"
+python -m pip install "google-cloud-aiplatform>=1.140.0"
 ```
 
 이제 에이전트 런타임을 생성하기 위해 아래 코드를 실행해보세요.
@@ -272,16 +272,16 @@ python -m pip install "google-cloud-aiplatform>=1.111.0"
 python - <<'PY'
 import os
 import vertexai
+from vertexai import agent_engines
 
 project = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = os.environ["GOOGLE_CLOUD_LOCATION"]
 
-client = vertexai.Client(
-    project=project,
-    location=location,
-)
+vertexai.init(project=project, location=location)
 
-agent_engine = client.agent_engines.create(display_name="lab2_memory_bank")
+# 에이전트 엔진을 생성합니다. 
+# display_name을 지정하여 리소스에 이름을 부여할 수 있습니다.
+agent_engine = agent_engines.create(display_name="lab2_memory_bank")
 
 print("Agent Engine resource name:")
 print(agent_engine.api_resource.name)
