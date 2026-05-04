@@ -71,14 +71,16 @@ adk run agents/lab2_trip_agent \
 | `--session_service_uri` | `sqlite://./outputs/session.db` | 세션 실행 기록을 SQLite 파일에 저장       |
 | `--memory_service_uri`  | `memory://`                     | 기억 저장소는 로컬 인메모리 방식으로 사용 |
 
-세션 서비스와 메모리 서비스가 분리된 이유는 데이터의 관리 범위와 목적이 다르기 때문입니다. 세션 관리는 여러 사용자의 대화 기록을 개별적으로 구분하여 관리해야 하는 서비스 환경에서 유용하게 활용됩니다. 이번 실습에서는 이러한 세션 관리보다는 대화 내용을 추출하여 장기 보관하고, 나중에 다시 찾아보는 메모리 서비스 기능에 더 집중하여 진행하겠습니다.
+세션 서비스와 메모리 서비스가 분리되어 있는 사실을 알 수 있습니다. 이 두 개념은 데이터의 관리 범위와 목적이 달라 따로 관리할 수 있도록 설계되었습니다. 세션 관리는 여러 사용자의 대화 기록을 개별적으로 구분하여 관리해야 하는 서비스 환경에서 유용하게 활용됩니다. 
 
-세션 서비스는 대화 도중에 발생하는 이벤트와 상태 정보를 순차적으로 기록하며 대화의 흐름을 유지합니다. 하지만 이 기록만으로는 대화 내용 중 필요한 정보를 선별하여 찾아내는 기능을 수행하기 어렵습니다. 반면 메모리 서비스는 대화 내용에서 주요 지식을 추출하여 검색에 최적화된 형태로 저장합니다. 에이전트가 과거 정보를 답변에 활용하려면 이처럼 인덱싱된 데이터를 제공하는 메모리 서비스가 필요합니다.
+세션 서비스는 대화 도중에 발생하는 이벤트와 상태 정보를 순차적으로 기록하며 대화의 흐름을 유지합니다. 하지만 이 기록만으로는 대화 내용 중 필요한 정보를 선별하여 찾아내는 기능을 수행하기 어렵습니다. 반면 메모리 서비스는 대화 내용에서 주요 정보를 추출하여 검색에 최적화된 형태로 저장합니다. 에이전트가 과거 정보를 답변에 활용하려면 이처럼 인덱싱된 데이터를 제공하는 메모리 서비스가 필요합니다.
 
 - **session_service_uri**: 대화의 상태를 관리합니다. sqlite를 지정하면 재실행 시 이전 대화의 흐름을 불러올 수 있습니다.
 - **memory_service_uri**: 지식을 검색할 저장소를 지정합니다. 로컬 테스트용 memory 방식은 휘발성이므로 프로세스 종료 시 정보가 사라집니다. 영구적인 보관을 위해서는 별도의 메모리 서비스 연결이 필요합니다.
 
-앞서 살펴본 개념들을 바탕으로, 이제 에이전트의 인메모리(`memory://`) 동작 방식을 직접 확인해 보겠습니다. 다시 한번 에이전트를 실행하여 구체적인 여행 취향을 말해 봅시다.
+실제 서비스 환경에서는 두 저장 개념이 모두 중요하지만, 이번 실습에서는 세션 저장소보다는 대화 내용을 추출하여 장기 보관하고, 나중에 다시 찾아보는 메모리 서비스 기능에 더 집중하여 진행하겠습니다.
+
+앞서 살펴본 개념들을 바탕으로, 이제 에이전트의 인메모리(`memory://`) 동작 방식을 직접 확인해 보겠습니다. 다시 한번 에이전트를 실행하여 여러분이 관심있는 여행에 대해서 말해보세요!.
 
 ```bash
 adk run agents/lab2_trip_agent \
@@ -86,7 +88,7 @@ adk run agents/lab2_trip_agent \
   --memory_service_uri="memory://"
 ```
 
-그 뒤에 다음과 같이 바닷가 인근 여행지를 알아볼까요?
+바닷가 인근 여행지를 알아볼까요?
 
 ```text
 [user]: 이번 여행은 사람 적고 조용한 바닷가에서 쉬고 싶은데, 추천해 줄 만한 곳 있어?
@@ -95,7 +97,15 @@ adk run agents/lab2_trip_agent \
 잠시 뒤 다음과 같이 답변이 오면 `exit`를 눌러 대화를 종료하세요.
 
 ```text
-[lab2_trip_agent]: 사람 북적이는 곳을 벗어나 조용히 파도 소리만 들으며 쉬고 싶으시군요! 강원도 고성의 가진해변을 추천해 드립니다.
+[lab2_trip_agent]: 조용하고 한적한 바닷가에서 진정한 '쉼'을 원하시는군요. 유명 관광지의 북적임에서 벗어나 파도 소리에 집중하며 휴식하기 좋은 국내 여행지 4곳을 추천해 드릴게요.
+
+### 1. 강원도 고성 (아야진, 백도 해변)
+강릉이나 속초보다 훨씬 위쪽에 위치해 있어 상대적으로 사람의 발길이 적습니다.
+(...중략...)
+
+3. 여행 **기간**은 어느 정도 생각하고 계신가요?
+
+말씀해 주시면 귀하의 취향에 딱 맞는 장소와 숙소까지 상세히 안내해 드릴게요!
 [user]: exit
 ```
 
@@ -139,19 +149,22 @@ def build_trip_planner() -> LlmAgent:
     return LlmAgent(
         name="lab2_trip_agent",
         model="gemini-3-flash-preview",
-
-        # TODO 1: 지침을 작성하세요.
-        # 힌트: 웹 검색과 기억을 활용해 여행 계획을 세우는 플래너의 역할과 지침을 명시하세요.
-        instruction=("당신은 ... 입니다. ... 하세요."),
-
-        # TODO 2: 실시간 웹 검색과 매 턴 시작 시 기억을 불러올 도구를 리스트에 넣으세요.
-        # 구글 검색, 메모리 불러오기 도구들을 사용해야 합니다.
-        tools=[],
-
+        instruction=(
+            "당신은 실시간 웹 검색과 이전 대화 기억을 활용하여 "
+            "사용자 맞춤형 여행 계획을 수립하는 수석 플래너입니다.\n"
+            "이전 대화 맥락이나 사용자의 취향을 기억에서 불러와 반영하세요."
+        ),
+        tools=[
+            google_search,
+            # TODO: 메모리 관련 도구들을 주석 처리해제하여 활성화 해보세요!
+            # LoadMemoryTool은 에이전트가 메모리에서 정보를 검색할 때 사용할 수 있는 도구입니다.
+            # 명시적인 호출이 없는 한 이 도구는 사용되지 않습니다.
+            # LoadMemoryTool(),
+            # PreloadMemoryTool은 시작과 매번 대화 과정에 자동으로 실행하여 메모리에서 정보를 불러옵니다.
+            # PreloadMemoryTool(),
+        ],
         generate_content_config=types.GenerateContentConfig(
-            tool_config=types.ToolConfig(
-                include_server_side_tool_invocations=True
-            ),
+            tool_config=types.ToolConfig(include_server_side_tool_invocations=True),
         ),
     )
 ```
@@ -197,7 +210,7 @@ return LlmAgent(
 )
 ```
 
-메모리 서비스를 연결하지 않거나 인메모리 상태로 에이전트를 실행하면, 에이전트는 이전 대화를 기억하지 못합니다. 다음과 같이 실행해볼까요?
+메모리 서비스를 연결하지 않거나 인메모리 상태로 에이전트를 실행하면, 에이전트는 이전 대화를 기억하지 못합니다. 다음과 같이 실행해볼까요? (이번에는 세션 기록을 저장할 `--session_service_uri` 옵션 대신 메모리 서비스를 연결하는 `--memory_service_uri` 옵션을 사용하는 점에 주의해주세요.)
 
 ```bash
 adk run agents/lab2_trip_agent --memory_service_uri="memory://"
@@ -215,20 +228,24 @@ adk run agents/lab2_trip_agent --memory_service_uri="memory://"
 명령어를 실행한 뒤, 터미널 대화창에 다음과 같이 질문을 입력해 보세요.
 
 ```text
-[user]: 아까 말한 조용한 바다 근처로 숙소도 같이 추천해줄래?
+[user]: 아까 말한 장소 근처로 숙소도 같이 추천해줄래?
 ```
 
 그러면 에이전트는 이전 대화에서 언급된 바닷가(강원도 고성 등)에 대한 정보가 없기 때문에 다음과 같이 답변하게 됩니다.
 
 ```text
-[lab2_trip_agent]: 죄송하지만 현재 제가 이전 대화 내용이 초기화되어, 아까 말씀 나누셨던 조용한 바다가 정확히 어느 지역이었는지 기억하지 못하고 있습니다.
+[lab2_trip_agent]: 네, 물론이죠! 아까 말씀하신 장소가 어디였는지 다시 한번만 알려주실 수 있을까요? 제가 그 주변에서 평점이 높고 이용객들의 만족도가 좋은 숙소들을 바로 찾아봐 드릴게요.
+
+혹시 선호하시는 숙소 스타일이 있으신가요? (예: 깔끔한 호텔, 감성적인 펜션, 가성비 좋은 게스트하우스 등) 선호하시는 스타일과 대략적인 예산 범위를 알려주시면 더 딱 맞는 곳으로 추천해 드릴 수 있습니다!
 ```
 
 그러면 장기 기억을 활용하기 위해서는 어떻게 해야할까요? 바로 장기 기억을 위한 메모리 서비스를 연결해야 합니다. [에이전트 확장](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale?hl=ko) 개념을 이용하면 기존의 LlmAgent에 여러 기능을 추가하여 확장할 수 있습니다.
 
 ### 에이전트 엔진 추가하기
 
-이 과정을 위해서는 구글 클라우드 계정과 `gcloud cli`가 필요합니다.
+이 과정을 위해서는 구글 클라우드 계정과 `gcloud cli`가 필요합니다. (Google Cloud의 cloudshell 환경으로 실행하시는 경우 `gcloud cli`가 미리 설치되어 있고 별도의 로그인이 필요하지 않습니다.)
+
+- [Google Cloud CLI 설치 가이드](https://docs.cloud.google.com/sdk/docs/install-sdk?hl=ko)
 
 ```bash
 gcloud auth application-default login
@@ -264,7 +281,7 @@ client = vertexai.Client(
     location=location,
 )
 
-agent_engine = client.agent_engines.create()
+agent_engine = client.agent_engines.create(display_name="lab2_memory_bank")
 
 print("Agent Engine resource name:")
 print(agent_engine.api_resource.name)
@@ -285,6 +302,9 @@ agentengine://projects/your-gcp-project-id/locations/asia-northeast3/reasoningEn
 ```
 
 이제 출력된 값을 `--memory_service_uri`에 넣어 실행합니다.
+
+> [!NOTE]
+> `memory_service_uri`의 `agentengine://`에 여러분이 생성한 에이전트 엔진의 ID로 꼭 바꾸어주세요!
 
 ```bash
 adk run agents/lab2_trip_agent \
