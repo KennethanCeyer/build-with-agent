@@ -21,9 +21,7 @@ async def auto_save_session_to_memory_callback(callback_context: CallbackContext
 
         valid_parts = []
         for part in event.content.parts:
-            if not getattr(part, "tool_call", None) and not getattr(
-                part, "tool_response", None
-            ):
+            if not getattr(part, "tool_call", None) and not getattr(part, "tool_response", None):
                 valid_parts.append(part)
 
         if valid_parts:
