@@ -88,6 +88,9 @@ adk run agents/lab2_trip_agent \
   --memory_service_uri="memory://"
 ```
 
+> [!CAUTION]
+> 현재 버전에서는 `--memory_service_uri="sqlite://./outputs/memory.db"`와 같이 SQLite 파일은 `memory_service_uri`에서 지원하지 않습니다. SQLite 파일은 `session_service_uri`의 세션 저장소로는 사용할 수 있지만, `memory_service_uri`에서 사용하면 에러가 발생합니다.
+
 바닷가 인근 여행지를 알아볼까요?
 
 ```text
@@ -148,10 +151,9 @@ Memory Service에서 관련 기억 검색
 from google.adk.agents.callback_context import CallbackContext
 
 # 대화가 종료된 후 세션 데이터를 메모리 뱅크로 추출 및 저장하는 콜백 함수입니다.
-async def save_session_to_memory(callback_context: CallbackContext):
+async def auto_save_session_to_memory_callback(callback_context: CallbackContext):
     await callback_context.add_session_to_memory()
-    return None
-```
+
 def build_trip_planner() -> LlmAgent:
     return LlmAgent(
         name="lab2_trip_agent",
@@ -170,14 +172,14 @@ def build_trip_planner() -> LlmAgent:
             # PreloadMemoryTool은 시작과 매번 대화 과정에 자동으로 실행하여 메모리에서 정보를 불러옵니다.
             # PreloadMemoryTool(),
         ],
-        after_agent_callback=save_session_to_memory,
+        after_agent_callback=auto_save_session_to_memory_callback,
         generate_content_config=types.GenerateContentConfig(
             tool_config=types.ToolConfig(include_server_side_tool_invocations=True),
         ),
     )
 ```
 
-이 코드에서 `after_agent_callback`은 에이전트가 대화 한 턴을 마칠 때마다 실행되는 후처리 로직을 정의합니다. `save_session_to_memory` 콜백은 세션 서비스에 기록된 대화 데이터를 메모리 서비스로 전송하여 추출 및 인덱싱 과정을 트리거합니다. 이 단계가 생략되면 대화 내용은 단순 로그로만 남게 되며, 에이전트가 나중에 다시 찾아볼 수 있는 지식으로 변환되지 않습니다.
+이 코드에서 `after_agent_callback`은 에이전트가 대화 한 턴을 마칠 때마다 실행되는 후처리 로직을 정의합니다. `auto_save_session_to_memory_callback` 콜백은 세션 서비스에 기록된 대화 데이터를 메모리 서비스로 전송하여 추출 및 인덱싱 과정을 트리거합니다. 이 단계가 생략되면 대화 내용은 단순 로그로만 남게 되며, 에이전트가 나중에 다시 찾아볼 수 있는 지식으로 변환되지 않습니다.
 
 이번 Lab2에서는 위 코드의 TODO를 해결하면 됩니다. 몇가지 새로운 개념이 있죠? `generate_content_config` 속성이 눈에 띄는데 이곳에 `include_server_side_tool_invocations`이 활성화 되어있습니다. 이는 LLM이 외부 서버의 도구를 호출하고 그 결과를 받아와 에이전트에게 제공하는 역할을 합니다. 현재 예제에서는 `google_search`와 같은 도구들이 이러한 방식으로 동작하기 때문에 켜주시는게 좋습니다.
 
@@ -211,7 +213,7 @@ return LlmAgent(
         PreloadMemoryTool(),
     ],
     # 대화 내용을 메모리 뱅크에 저장하도록 콜백을 설정합니다.
-    after_agent_callback=save_session_to_memory,
+    after_agent_callback=auto_save_session_to_memory_callback,
     generate_content_config=types.GenerateContentConfig(
         tool_config=types.ToolConfig(include_server_side_tool_invocations=True),
     ),
@@ -325,11 +327,10 @@ agentengine://projects/.../locations/asia-northeast3/reasoningEngines/1234567890
 이제 출력된 값을 `--memory_service_uri`에 넣어 실행합니다.
 
 > [!NOTE]
-> `memory_service_uri`의 `agentengine://`에 여러분이 생성한 에이전트 엔진의 ID로 꼭 바꾸어주세요!
+> `memory_service_uri`의 `agentengine://`에 여러분이 생성한 에이전트 엔진의 ID로 꼭 바꾸어주세요! (projects/.../locations/asia-northeast3/reasoningEngines/1234567890123456789 전체를 넣거나, 가장 뒷 부분에 위치한 숫자만 복사 & 붙여넣기 하셔도 됩니다.)
 
 ```bash
 adk run agents/lab2_trip_agent \
-  --session_service_uri="sqlite://./outputs/session.db" \
   --memory_service_uri="agentengine://1234567890123456789" \
   --session_id="my_trip"
 ```
@@ -337,7 +338,7 @@ adk run agents/lab2_trip_agent \
 이제 출력된 값을 `--memory_service_uri`에 넣어 실행한 뒤, 여행 계획에 대한 첫 번째 질문을 입력해 보세요.
 
 ```text
-[user]: 8월 초에 강원도 양양으로 2박 3일 여행 가려고 하는데, 거기에서 즐길 거리가 뭐가 있을까?
+[user]: 8월 초에 강원도 양양으로 2박 3일 여행 가려고 하는데, 거기에서 즐길 거리가 뭐가 있을까? 앞으로 내 여행 취향으로 기억해줘.
 ```
 
 에이전트가 실시간 검색을 통해 양양의 여행지들을 추천하는지 확인합니다. 답변이 완료되면 `exit`를 입력해 대화를 종료합니다.
@@ -347,15 +348,11 @@ adk run agents/lab2_trip_agent \
 [user]: exit
 ```
 
-대화를 `exit`를 입력해 종료했다면, 같은 세션 ID로 대화를 다시 이어서 해봅시다.
+대화를 `exit`를 입력해 종료했다면, 다시 대화를 다시 이어서 해봅시다.
 
-> [!NOTE]
-> `memory_service_uri`의 `agentengine://`에 여러분이 생성한 에이전트 엔진의 ID로 꼭 바꾸어주세요!
-> 또한 `session_id`를 다르게 설정하면 완전히 새로운 대화가 시작되게 됩니다. 기존에 대화를 나눴던 `session_id`와 동일하게 맞춰 실행하면 이전 대화를 이어서 할 수 있습니다.
 
 ```bash
 adk run agents/lab2_trip_agent \
-  --session_service_uri="sqlite://./outputs/session.db" \
   --memory_service_uri="agentengine://1234567890123456789" \
   --session_id="my_trip"
 ```
@@ -363,7 +360,7 @@ adk run agents/lab2_trip_agent \
 동일한 세션 ID(`my_trip`)로 다시 접속한 뒤, 이전 대화 내용을 기억하고 있는지 확인하기 위한 추가 질문을 보내 봅니다.
 
 ```text
-[user]: 내가 아까 말했던 여행지에 어울리는 숙소도 추천해줄래?
+[user]: 내 여행 취향에 맞는 숙소도 추천해줄래?
 ```
 
 에이전트가 이전 대화에서 언급한 `8월 초 강원도 양양`이라는 맥락을 기억하여 답변하는지 확인합니다.
@@ -391,15 +388,12 @@ return LlmAgent(
 )
 ```
 
-> 주의 사항: 현재 버전에서는 `--memory_service_uri="sqlite://./outputs/memory.db"`와 같이 SQLite 파일은 `memory_service_uri`에서 지원하지 않습니다. SQLite 파일은 `session_service_uri`의 세션 저장소로는 사용할 수 있지만, `memory_service_uri`에서 사용하면 에러가 발생합니다.
-
 ### ADK 웹 콘솔에서 확인하기
 
 웹 콘솔에서도 같은 방식으로 사용할 수 있습니다.
 
 ```bash
 adk web agents/ --host 0.0.0.0 --allow_origins="*" \
-  --session_service_uri="sqlite://./outputs/session.db" \
   --memory_service_uri="agentengine://1234567890123456789"
 ```
 
