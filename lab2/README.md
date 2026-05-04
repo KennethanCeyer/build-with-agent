@@ -284,10 +284,10 @@ vertexai.init(project=project, location=location)
 agent_engine = agent_engines.create(display_name="lab2_memory_bank")
 
 print("Agent Engine resource name:")
-print(agent_engine.api_resource.name)
+print(agent_engine.resource_name)
 
 print("\nUse this with ADK:")
-print(f"agentengine://{agent_engine.api_resource.name}")
+print(f"agentengine://{agent_engine.resource_name}")
 PY
 ```
 
