@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 from mcp.server.fastmcp import FastMCP
@@ -8,8 +7,8 @@ from mcp.server.fastmcp import FastMCP
 from lab3_meeting_agent.adk_support import (
     expose_google_api_key,
     resolve_output_dir,
-    save_group_chat_update_payload,
     save_backup_plan_payload,
+    save_group_chat_update_payload,
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parent
