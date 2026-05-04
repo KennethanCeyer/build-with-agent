@@ -46,6 +46,16 @@ adk run agents/lab2_trip_agent \
   --memory_service_uri="memory://"
 ```
 
+명령어를 실행하면 에이전트가 대기 상태가 됩니다. 먼저 간단한 인사를 나눠 에이전트가 정상적으로 응답하는지 확인해 보세요.
+
+```text
+[user]: 안녕하세요. 어떤ㄱ
+[lab2_trip_agent]: 안녕하세요! 저는 사용자의 취향과 웹 검색 결과, 그리고 이전 대화 기억을 활용해 최적의 여행 계획을 세워드리는 여행 플래너입니다. 어떤 여행지를 찾고 계신가요?
+[user]: exit
+```
+
+정상적인 응답을 확인했다면 `exit`를 입력해 종료합니다. 이제 방금 입력한 명령어에 포함된 옵션들이 각각 무엇을 의미하는지 자세히 알아보겠습니다.
+
 이 명령어의 의미는 다음과 같습니다.
 
 | 옵션                    | 값                              | 의미                                      |
@@ -67,7 +77,7 @@ adk run agents/lab2_trip_agent \
 - **session_service_uri**: 현재 대화의 이벤트와 상태를 관리합니다. 예를 들어 `memory://`는 휘발성 세션이고, `sqlite://./outputs/session.db`는 세션 이벤트를 로컬 파일에 저장합니다.
 - **memory_service_uri**: `PreloadMemoryTool`이나 `LoadMemoryTool`이 검색할 장기 기억 저장소를 연결합니다. 로컬 테스트에는 `memory://`를 사용할 수 있지만, 이 방식은 프로세스 종료 시 사라집니다. 재시작 후에도 유지되는 장기 기억은 `agentengine://<AGENT_ENGINE_ID>` 같은 장기 보관에 적합한 메모리 서비스가 필요합니다.
 
-이번 예제에서 첫번째로는 `memory://`로 메모리 동작 방식을 확인합니다. 단, `memory://`는 프로세스가 종료되면 사라진다는 점을 유념하세요. 재시작 후에도 유지되는 장기 기억은 [추가적인 메모리 뱅크 서비스](https://adk.dev/sessions/memory/#choosing-the-right-memory-service)를 연결하여 사용합니다. 조금 구성이 어려울 수 있으므로 다음 내용을 차근차근 따라오세요! 다음 코드를 실행해봅시다.
+앞서 살펴본 개념들을 바탕으로, 이제 에이전트의 인메모리(`memory://`) 동작 방식을 직접 확인해 보겠습니다. 다시 한번 에이전트를 실행하여 구체적인 여행 취향을 말해 봅시다.
 
 ```bash
 adk run agents/lab2_trip_agent \
