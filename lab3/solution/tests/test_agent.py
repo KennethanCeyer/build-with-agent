@@ -14,7 +14,6 @@ def test_agent_structure():
     assert sub_agent_names == [
         "meeting_planner",
         "design_expert",
-        "a2ui_formatter",
     ]
 
 
