@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from google.adk.agents import LlmAgent, SequentialAgent
-from google.adk.agents.context import Context
-from google.adk.models.llm_response import LlmResponse
 from google.adk.tools.load_memory_tool import load_memory
 from google.adk.tools.preload_memory_tool import PreloadMemoryTool
 from google.genai import types
@@ -55,52 +53,13 @@ design_expert = LlmAgent(
 )
 
 
-# 3. UI 카드 생성을 위한 콜백 함수
-async def a2ui_builder_callback(
-    context: Context,
-    llm_response: LlmResponse,
-) -> None:
-    del context
-
-    if not llm_response.content or not llm_response.content.parts:
-        return None
-
-    body = "\n".join(
-        part.text for part in llm_response.content.parts if getattr(part, "text", None)
-    )
-    if not body:
-        return None
-
-    metadata = dict(llm_response.custom_metadata or {})
-    metadata["a2ui"] = {
-        "type": "meeting_plan_card",
-        "title": "모임 기획안",
-        "body": body,
-    }
-    llm_response.custom_metadata = metadata
-    return None
-
-
-# 4. 최종 결과 포매팅 에이전트
-a2ui_formatter = LlmAgent(
-    name="a2ui_formatter",
-    model="gemini-3.1-flash-lite-preview",
-    instruction=(
-        "앞선 기획안과 디자인 결과를 종합하여 사용자에게 보여줄 최종 내용을 정리하세요. "
-        "내용은 간결하고 매력적이어야 하며, 기획된 모임의 핵심 정보가 잘 드러나야 합니다."
-    ),
-    after_model_callback=a2ui_builder_callback,
-)
-
-
-# 5. 전체 협업 구조 정의 (SequentialAgent)
+# 3. 전체 협업 구조 정의 (SequentialAgent)
 def build_meeting_manager() -> SequentialAgent:
     return SequentialAgent(
         name="lab3_meeting_agent",
         sub_agents=[
             meeting_planner,
             design_expert,
-            a2ui_formatter,
         ],
     )
 

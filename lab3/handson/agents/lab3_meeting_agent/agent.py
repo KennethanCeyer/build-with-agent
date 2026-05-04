@@ -15,6 +15,7 @@ memory_retrieval_tools = [
     load_memory,
 ]
 
+# 1. 모임 기획 에이전트
 meeting_planner = LlmAgent(
     name="meeting_planner",
     model="gemini-3-flash-preview",
@@ -29,6 +30,7 @@ meeting_planner = LlmAgent(
     ),
 )
 
+# 2. 디자인 전문가 에이전트
 design_expert = LlmAgent(
     name="design_expert",
     model="gemini-3.1-flash-lite-preview",
@@ -49,6 +51,7 @@ design_expert = LlmAgent(
 )
 
 
+# 3. 전체 협업 구조 정의 (SequentialAgent)
 def build_meeting_manager() -> SequentialAgent:
     return SequentialAgent(
         name="lab3_meeting_agent",
