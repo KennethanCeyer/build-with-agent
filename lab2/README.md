@@ -25,17 +25,30 @@ graph LR
 
 ## 1. 패키지 및 환경 설정
 
-`lab2/handson` 폴더로 이동해서 가상환경을 준비합시다.
+`lab2/handson` 폴더로 이동해서 `uv`로 가상환경을 준비합시다. `uv`가 아직 없다면 [uv 설치 문서](https://docs.astral.sh/uv/getting-started/installation/)를 참고하세요. macOS, Linux, WSL 환경에서는 아래 명령어로 설치하고, 설치 경로인 `~/.local/bin`을 PATH에 등록합니다.
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+uv --version
+```
 
 ```bash
 cd lab2/handson
-python -m venv .venv
+uv sync
 source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e .
+mkdir -p outputs
+
+# uv를 사용할 수 없는 경우에만 아래 pip 방식으로 설치합니다.
+# python -m venv .venv
+# source .venv/bin/activate
+# python -m pip install --upgrade pip
+# python -m pip install -e .
+# mkdir -p outputs
 ```
 
-가상환경 활성화 후 워크스페이스 루트의 `.env` 파일에 API 키가 설정되어 있는지 확인합니다. 설정이 완료된 `.env` 파일의 모습은 아래와 같습니다.
+설치 후 워크스페이스 루트의 `.env` 파일에 API 키가 설정되어 있는지 확인합니다. 설정이 완료된 `.env` 파일의 모습은 아래와 같습니다.
 
 ```env
 GOOGLE_API_KEY=AIzaSy... (본인의 API 키 입력)
@@ -278,7 +291,10 @@ export GOOGLE_CLOUD_LOCATION="asia-northeast3"
 메모리 뱅크를 사용하기 위해서는 에이전트 런타임이 필요합니다. 에이전트 런타임을 생성하기 위해 에이전트 플랫폼 SDK을 설치해주세요. 에이전트 플랫폼이란 구글 클라우드에서 제공하는 에이전트 개발 전반에 필요한 여러 클라우드 자원을 통합적으로 관리할 수 있게 해주는 플랫폼입니다.
 
 ```bash
-python -m pip install "google-cloud-aiplatform>=1.140.0"
+uv pip install "google-cloud-aiplatform>=1.140.0"
+
+# uv를 사용할 수 없는 경우에만 아래 pip 방식으로 설치합니다.
+# python -m pip install "google-cloud-aiplatform>=1.140.0"
 ```
 
 이번 실습에서는 [Vertex AI](https://cloud.google.com/vertex-ai)의 [Agent Engine](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale?hl=ko)을 사용합니다. 이를 위해 Agent Platform API의 사용 권한을 활성화해야합니다. 아래 링크를 참고하여 권한을 활성화해보세요.

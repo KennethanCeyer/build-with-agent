@@ -22,17 +22,28 @@ graph LR
 
 ## 2. 패키지 및 환경 설정
 
-실습 폴더인 `lab3/handson`으로 이동해서 독립적인 가상환경을 준비합니다.
+실습 폴더인 `lab3/handson`으로 이동해서 `uv`로 독립적인 가상환경을 준비합니다. `uv`가 아직 없다면 [uv 설치 문서](https://docs.astral.sh/uv/getting-started/installation/)를 참고하세요. macOS, Linux, WSL 환경에서는 아래 명령어로 설치하고, 설치 경로인 `~/.local/bin`을 PATH에 등록합니다.
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+uv --version
+```
 
 ```bash
 cd lab3/handson
-python -m venv .venv
+uv sync
 source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e .
+
+# uv를 사용할 수 없는 경우에만 아래 pip 방식으로 설치합니다.
+# python -m venv .venv
+# source .venv/bin/activate
+# python -m pip install --upgrade pip
+# python -m pip install -e .
 ```
 
-가상환경 활성화 후에는 워크스페이스 루트의 `.env` 파일에 API 키가 설정되어 있는지 확인합니다.
+설치 후에는 워크스페이스 루트의 `.env` 파일에 API 키가 설정되어 있는지 확인합니다.
 
 ## 3. 초기 상태 확인
 

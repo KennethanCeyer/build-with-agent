@@ -38,17 +38,26 @@
 
 ### 공통 개발 환경
 
-각 실습 폴더의 `handson` 디렉토리에서 가상환경을 활성화하고 필수 패키지를 설치합니다.
+각 실습 폴더의 `handson` 디렉토리에서 `uv`로 가상환경과 필수 패키지를 준비합니다. `uv`가 아직 없다면 [uv 설치 문서](https://docs.astral.sh/uv/getting-started/installation/)를 참고하세요. macOS, Linux, WSL 환경에서는 아래 명령어로 설치하고, 설치 경로인 `~/.local/bin`을 PATH에 등록합니다.
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+uv --version
+```
 
 ```bash
 cd lab1/handson
-python -m venv .venv
+uv sync
 source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e .
-```
 
-실행 시 터미널 프롬프트 앞에 `(.venv)`가 표시되는지 확인합니다. 상세한 실행 방법은 각 Lab의 README 문서에 안내되어 있습니다.
+# uv를 사용할 수 없는 경우에만 아래 pip 방식으로 설치합니다.
+# python -m venv .venv
+# source .venv/bin/activate
+# python -m pip install --upgrade pip
+# python -m pip install -e .
+```
 
 ## ADK 에이전트의 이해
 

@@ -25,17 +25,28 @@ graph LR
 
 ## 1. 패키지 및 환경 설정
 
-실습 폴더인 `lab1/handson`으로 이동해서 가상환경부터 준비해 봅시다.
+실습 폴더인 `lab1/handson`으로 이동해서 `uv`로 가상환경부터 준비해 봅시다. `uv`가 아직 없다면 [uv 설치 문서](https://docs.astral.sh/uv/getting-started/installation/)를 참고하세요. macOS, Linux, WSL 환경에서는 아래 명령어로 설치하고, 설치 경로인 `~/.local/bin`을 PATH에 등록합니다.
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+uv --version
+```
 
 ```bash
 cd lab1/handson
-python -m venv .venv
+uv sync
 source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e .
+
+# uv를 사용할 수 없는 경우에만 아래 pip 방식으로 설치합니다.
+# python -m venv .venv
+# source .venv/bin/activate
+# python -m pip install --upgrade pip
+# python -m pip install -e .
 ```
 
-가상환경 활성화 후에는 워크스페이스 루트의 `.env` 파일에 API 키가 설정되어 있는지 확인합니다. 설정이 완료된 `.env` 파일의 모습은 아래와 같습니다.
+설치 후에는 워크스페이스 루트의 `.env` 파일에 API 키가 설정되어 있는지 확인합니다. 설정이 완료된 `.env` 파일의 모습은 아래와 같습니다.
 
 ```env
 GOOGLE_API_KEY=AIzaSy... (본인의 API 키 입력)
@@ -155,7 +166,7 @@ cat outputs/trip-plan.md
 adk web agents/ --host 0.0.0.0 --allow_origins="*"
 ```
 
-`adk web` 명령어를 통해 에이전트를 브라우저를 통해 UI로 직관적으로 살펴보며 확인할 수 있습니다. adk web을 사용하면 다음과 같은 이점을 얻을 수 있습니다.
+`adk web` 명령어를 통해 에이전트를 브라우저를 통해 UI로 직관적으로 살펴보며 확인할 수 있습니다. ADK 웹 콘솔을 사용하면 다음과 같은 이점을 얻을 수 있습니다.
 
 - 다양한 형태의 에이전트 아키텍처 흐름을 그래프 형태로 시각적으로 제공합니다. 
 - 추적(Trace) 기능을 통해 에이전트의 내부 동작을 단계별로 확인할 수 있습니다. 이를 이용해 디버깅이 용이합니다.
