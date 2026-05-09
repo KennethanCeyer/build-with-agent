@@ -1,5 +1,10 @@
 # Lab 1: 메모 비서 에이전트
 
+> [!NOTE]
+> 실습 진행에 필요한 발표 자료와 가이드를 확인해 주세요.
+> - 발표 자료: [Google Slides](https://docs.google.com/presentation/d/1LSxyGVS2fpUWVQ_QHji3HeSw9zw5Ms2Lwcr9jQNfS3U/edit?usp=sharing)
+> - 핸즈온 대처 가이드: [Google Docs](https://docs.google.com/document/d/1x8hEyDTr-tvmfCzUtUYkC7z_KOJFxbxD/edit?usp=sharing&ouid=114268949095976081208&rtpof=true&sd=true) (진행 중 오류가 발생할 경우 참고하세요.)
+
 이번 실습에서는 사용자가 작성한 여행 메모를 읽고, 내용을 정리해 파일로 저장하는 에이전트를 함께 만들어 보겠습니다.
 
 ## 실습 목표

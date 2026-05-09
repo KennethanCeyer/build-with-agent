@@ -1,5 +1,10 @@
 # ADK Hands-on Workshop
 
+> [!NOTE]
+> 실습 진행에 필요한 발표 자료와 가이드를 확인해 주세요.
+> - 발표 자료: [Google Slides](https://docs.google.com/presentation/d/1LSxyGVS2fpUWVQ_QHji3HeSw9zw5Ms2Lwcr9jQNfS3U/edit?usp=sharing)
+> - 핸즈온 대처 가이드: [Google Docs](https://docs.google.com/document/d/1x8hEyDTr-tvmfCzUtUYkC7z_KOJFxbxD/edit?usp=sharing&ouid=114268949095976081208&rtpof=true&sd=true) (진행 중 오류가 발생할 경우 참고하세요.)
+
 여행과 모임을 주제로 ADK 에이전트의 기초부터 검색, 메모리, 협업 구조까지 단계별로 실습합니다.
 
 ## 실습 가이드
