@@ -38,12 +38,11 @@
 
 ### 공통 개발 환경
 
-각 실습 폴더의 `handson` 디렉토리에서 `uv`로 가상환경과 필수 패키지를 준비합니다. `uv`가 아직 없다면 [uv 설치 문서](https://docs.astral.sh/uv/getting-started/installation/)를 참고하세요. macOS, Linux, WSL 환경에서는 아래 명령어로 설치하고, 설치 경로인 `~/.local/bin`을 PATH에 등록합니다.
+각 실습 폴더의 `handson` 디렉토리에서 `uv`로 가상환경과 필수 패키지를 준비합니다. `uv`가 아직 없다면 [uv 설치 문서](https://docs.astral.sh/uv/getting-started/installation/)를 참고하세요. macOS, Linux, WSL 환경에서는 아래 명령어로 설치할 수 있습니다. 설치가 끝난 뒤 새 터미널을 열거나 설치 프로그램이 출력한 안내에 따라 PATH를 반영한 다음 `uv --version`으로 확인합니다.
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
-export PATH="$HOME/.local/bin:$PATH"
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+# 새 터미널을 열거나 설치 안내의 PATH 설정을 반영한 뒤 확인합니다.
 uv --version
 ```
 
