@@ -14,12 +14,6 @@
 **/.adk/
 **/outputs/*
 !**/outputs/.gitkeep
-!lab1/solution/outputs/host-brief.md
-!lab2/solution/outputs/one-day-itinerary.md
-!lab2/solution/outputs/budget-breakdown.json
-!lab3/solution/outputs/backup-meetup-plan.md
-!lab3/solution/outputs/group-chat-update.md
-!lab3/solution/outputs/picnic-update-card.png
 **/__pycache__/
 **/coverage.xml
 dist/

@@ -46,7 +46,7 @@ adk run agents/lab1_memo_agent
 
 > [!TIP]
 > 이는 ADK의 일부 기능이 실험 단계임을 알리는 경고입니다. 실습을 진행하는 데는 아무런 지장이 없으니 안심하고 넘어가셔도 됩니다.
-> `Running agent lab1_trip_agent...` 메시지가 출력되고 대화가 시작된다면 정상적으로 실행된 것입니다.
+> `Running agent lab1_memo_agent...` 메시지가 출력되고 대화가 시작된다면 정상적으로 실행된 것입니다.
 
 대화 프롬프트에 `"여행 메모를 읽고 일정을 정리해 줘"`라고 입력해 볼까요? 현재는 지침이 비어 있어 메모 파일을 읽거나 결과를 저장하지 못하는 모습을 확인할 수 있습니다.
 
@@ -54,7 +54,7 @@ adk run agents/lab1_memo_agent
 adk run agents/lab1_memo_agent
 
 [user]: 여행 메모를 읽고 일정을 정리해 줘
-[lab1_trip_agent]: 네, 여행 메모를 바탕으로 일정을 정리해 드릴게요.
+[lab1_memo_agent]: 네, 여행 메모를 바탕으로 일정을 정리해 드릴게요.
 
 여행 메모를 여기에 붙여넣어 주시면 제가 읽고 깔끔하게 정리해 드리겠습니다! 어떤 형식으로 정리해 드릴까요? (예: 날짜별, 방문지별, 활동별 등)
 [user]: exit
@@ -84,7 +84,7 @@ adk run agents/lab1_memo_agent
 ```python
 def build_travel_agent() -> LlmAgent:
     return LlmAgent(
-        name="lab1_trip_agent",
+        name="lab1_memo_agent",
         model="gemini-3-flash-preview",
         instruction=(
             "여행 메모를 읽고 일정을 정리해 저장하는 비서입니다. "
@@ -114,7 +114,7 @@ adk run agents/lab1_memo_agent
 adk run agents/lab1_memo_agent
 
 [user]: 여행 메모를 읽고 일정을 정리해 줘
-[lab1_trip_agent]: 제주도 3박 4일 여행 일정을 다음과 같이 정리했습니다.
+[lab1_memo_agent]: 제주도 3박 4일 여행 일정을 다음과 같이 정리했습니다.
 
 ---
 
@@ -128,10 +128,10 @@ adk run agents/lab1_memo_agent
 
 이 내용을 파일로 저장할까요? 혹시 3일차와 4일차에 추가하고 싶은 내용이 있다면 알려주세요!
 [user]: 저장해줄래?
-[lab1_trip_agent]: 일정을 성공적으로 저장했습니다! (`outputs/trip-plan.md`)
+[lab1_memo_agent]: 일정을 성공적으로 저장했습니다! (`outputs/trip-plan.md`)
 
 나중에 3일차와 4일차 계획이 생기면 언제든 말씀해 주세요. 내용을 수정해서 다시 저장해 드릴게요.
-[lab1_trip_agent]: exit
+[lab1_memo_agent]: exit
 ```
 
 모든 작업이 문제 없이 완료되었다면, `outputs` 폴더 안에 `trip-plan.md` 파일이 정상적으로 저장된 것을 확인할 수 있습니다.
@@ -167,7 +167,9 @@ adk web agents/ --host 0.0.0.0 --allow_origins="*"
 
 #### Step 2: 브라우저 접속 및 에이전트 선택
 1. 앞서 실행한 터미널에 표시된 `http://127.0.0.1:8000` 주소를 클릭하거나 브라우저에 직접 입력하여 접속합니다.
-2. 좌측 상단 메뉴에서 `lab1_trip_agent`를 선택합니다. (다음 이미지를 참고하세요.)
+2. 좌측 상단 메뉴에서 `lab1_memo_agent`를 선택합니다. (다음 이미지를 참고하세요.)
+   - 웹 콘솔의 목록에는 에이전트 폴더명인 `lab1_memo_agent`가 표시됩니다.
+   - 대화 말풍선과 CLI 로그에는 코드에서 지정한 에이전트 이름인 `lab1_memo_agent`가 표시됩니다.
 
 ![ADK Web 에이전트 선택](../assets/lab1-adk-web-left-agent-dropdown.png)
 

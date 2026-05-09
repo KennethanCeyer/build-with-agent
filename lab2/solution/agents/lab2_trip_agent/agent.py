@@ -12,7 +12,6 @@ from .tools import google_search
 
 
 async def auto_save_session_to_memory_callback(callback_context: CallbackContext):
-    await callback_context.add_session_to_memory()
     session_events = callback_context._invocation_context.session.events
     filtered_events = []
     for event in session_events:
